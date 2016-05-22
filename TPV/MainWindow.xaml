@@ -1,0 +1,372 @@
+﻿<Window x:Class="TPV.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TPV"
+        mc:Ignorable="d"
+        Title="TPV" Height="768" Width="1024" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded">
+    <Window.Resources>
+        <local:TPVDataSet x:Key="tPVDataSet" />
+        <CollectionViewSource x:Key="productosViewSource" Source="{Binding Productos, Source={StaticResource tPVDataSet}}" />
+        <CollectionViewSource x:Key="categoriasViewSource" Source="{Binding Categorias, Source={StaticResource tPVDataSet}}" />
+        <CollectionViewSource x:Key="categoriasProductosViewSource" Source="{Binding FK_Categorias_Productos, Source={StaticResource categoriasViewSource}}" />
+        <CollectionViewSource x:Key="clientesCompradoresViewSource" Source="{Binding ClientesCompradores, Source={StaticResource tPVDataSet}}" />
+        <CollectionViewSource x:Key="clientesVendedoresViewSource" Source="{Binding ClientesVendedores, Source={StaticResource tPVDataSet}}" />
+    </Window.Resources>
+    <Window.Background>
+        <ImageBrush ImageSource="imagenes/wallpaper.jpg" />
+    </Window.Background>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="Background" Value="#33000000" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="15,2,15,2" />
+                <Setter Property="BorderBrush" Value="#FFABADB3" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Opacity="0.6" ShadowDepth="3" RenderingBias="Quality" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="FontFamily" Value="Calibri" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+        </Grid.Resources>
+        <Grid.DataContext>
+            <StaticResource ResourceKey="clientesVendedoresViewSource" />
+        </Grid.DataContext>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!--Boton Menu-->
+        <Border VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Source="/imagenes/signs.png" Width="20" Height="20" Margin="5" VerticalAlignment="Center" />
+                <Label Name="labMenu" Content="Menu" FontSize="14" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <!--Botones Comprar y Vender-->
+        <Grid Grid.Row="2" Margin="0,0,0,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Left">
+                <Image Source="imagenes/register.png" Margin="0,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Border>
+                    <Label Name="btnComprar" Content="Comprar" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+                </Border>
+                <Border x:Name="btnVender" MouseLeftButtonUp="btnVender_MouseLeftButtonUp">
+                    <Label Content="Vender" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <!--Botones Proveedores y Clientes-->
+        <Grid Grid.Row="3" Margin="0,0,0,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Grid.RowSpan="2">
+                <Image Source="/imagenes/clients.png" Margin="0,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60" />
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Border Name="btnProveedores" MouseLeftButtonUp="btnProveedores_MouseLeftButtonUp">
+                    <Label Name="labProveedores" Content="Proveedores" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+                </Border>
+                <Border Name="btnClientes" MouseLeftButtonUp="btnClientes_MouseLeftButtonUp">
+                    <Label Name="labClientes" Content="Clientes" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <!--Boton Stock-->
+        <Grid Grid.Row="4" Margin="0,0,0,30" Name="btnStock" MouseLeftButtonUp="btnStock_MouseLeftButtonUp">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Left">
+                <Image Source="imagenes/stock.png" Margin="0,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60" />
+            </Border>
+            <Border Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center">
+                <Label Content="Stock" HorizontalAlignment="Center" />
+            </Border>
+        </Grid>
+
+        <!--Boton Opciones-->
+        <Border Grid.Row="6" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Image Source="/imagenes/options.png" Width="20" Height="20" Margin="5" VerticalAlignment="Center" />
+                <Label Name="labOpciones" Content="Opciones" FontSize="14" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <TabControl x:Name="tabControl" Grid.Row="1" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="4" Margin="20,10,10,10"
+                    Background="#3F000000"  BorderBrush="#FFABADB3" BorderThickness="1">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+            <!--Stock-->
+            <TabItem x:Name="tabStock" BorderBrush="Transparent" Header="Stock">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel HorizontalAlignment="Left" DataContext="{StaticResource productosViewSource}">
+                        <Label Content="Categorías:" FontSize="14" />
+                        <ComboBox x:Name="cbxStock" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                        <Label Content="Productos:" FontSize="14" />
+                        <ListView x:Name="lvStock" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="380" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="523" Width="206" ItemsSource="{Binding}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Border Grid.Column="1" Margin="5,5,5,0" VerticalAlignment="Top" Height="365">
+                            <Grid VerticalAlignment="Top" DataContext="{StaticResource productosViewSource}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="150" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Label Content="Nombre:" Margin="5" />
+                                <TextBox x:Name="tbxNombreStock" Margin="5" Grid.Column="1" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <Label Content="Decripción:" Margin="5" Grid.Row="1" />
+                                <TextBox x:Name="tbxDescripcionStock" Margin="5" Grid.Column="1" Grid.Row="1" Foreground="White" FontSize="16" Background="{x:Null}" Text="{Binding Descripcion, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <Label Content="Cantidad:" Margin="5" Grid.Row="2" />
+                                <TextBox x:Name="tbxCantidadStock" Margin="5" Grid.Column="1" Grid.Row="2" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Cantidad, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <Label Content="Precio:" Margin="5" Grid.Row="3" />
+                                <TextBox x:Name="tbxPrecioStock" Margin="5" Grid.Column="1" Grid.Row="3" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Precio, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <Label Content="Categoría:" Margin="5" Grid.Row="4" />
+                                <ComboBox x:Name="cbxCategoriaStock" TextBoxBase.TextChanged="cbxCategoriaStock_TextChanged" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Background="{x:Null}" Foreground="Black" FontSize="16" Text="{Binding nombre, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource categoriasViewSource}, ValidatesOnExceptions=true}" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" IsEditable="True" />
+                                <Button x:Name="btnAñadirCategoriaStock" Content="Añadir categoria" HorizontalAlignment="Right" Click="btnAñadirCategoriaStock_Click" Grid.Column="1" Grid.Row="5" Margin="5" IsEnabled="False" />
+                            </Grid>
+                        </Border>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnAñadirStock"  HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirStock_Click" Source="imagenes/add.png" Stretch="Fill" />
+                            <Image x:Name="btnAñadirConfirmarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirConfirmarStock_Click" Source="imagenes/confirm.png" Visibility="Hidden" />
+                            <Image x:Name="btnAñadirCancelarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCancelarStock_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnEliminarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarStock_Click" Source="imagenes/delete.png" />
+                            <Image x:Name="btnEliminarConfirmarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarConfirmarStock_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
+                            <Image x:Name="btnEliminarCancelarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCancelarStock_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnModificarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarStock_Click" Source="imagenes/edit.png" />
+                            <Image x:Name="btnModificarConfirmarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarConfirmarStock_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
+                            <Image x:Name="btnModificarCancelarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCancelarStock_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <!--Proveedores-->
+            <TabItem x:Name="tabProveedores">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel HorizontalAlignment="Left">
+                        <Label Content="Proveedores:" FontSize="14" />
+                        <ListView x:Name="lvProveedores" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="380" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="523" Width="206" ItemsSource="{Binding}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Border Grid.Column="1" Margin="5,27,5,0" VerticalAlignment="Top" BorderThickness="1">
+                            <Grid VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Label Content="Nombre:" Margin="5" />
+                                <TextBox x:Name="tbxNombreProveedores" Margin="5" Grid.Column="1" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                                <Label Content="Apellidos:" Margin="5" Grid.Row="1" />
+                                <TextBox x:Name="tbxApellidosProveedores" Margin="5" Grid.Column="1" Grid.Row="1" Foreground="White" FontSize="16" Background="{x:Null}"  IsReadOnly="True" Text="{Binding Apellidos, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
+                                <Label Content="Dirección:" Margin="5" Grid.Row="2" />
+                                <TextBox x:Name="tbxDireccionProveedores" Margin="5" Grid.Column="1" Grid.Row="2" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                                <Label Content="Telefono:" Margin="5" Grid.Row="3" />
+                                <TextBox x:Name="tbxTelefonoProveedores" Margin="5" Grid.Column="1" Grid.Row="3" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                                <Label Content="DNI:" Margin="5" Grid.Row="4" />
+                                <TextBox x:Name="tbxDNIProveedores" TextBoxBase.TextChanged="cbxCategoriaStock_TextChanged" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Background="{x:Null}" Foreground="Black" FontSize="16" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                            </Grid>
+                        </Border>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnAñadirProveedor"  HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirProveedor_Click" Source="imagenes/add.png" Stretch="Fill" />
+                            <Image x:Name="btnAñadirConfirmarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirConfirmarProveedor_Click" Source="imagenes/confirm.png" Visibility="Hidden" />
+                            <Image x:Name="btnAñadirCancelarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCancelarProveedor_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnEliminarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarProveedor_Click" Source="imagenes/delete.png" />
+                            <Image x:Name="btnEliminarConfirmarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarConfirmarProveedor_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
+                            <Image x:Name="btnEliminarCancelarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCancelarProveedor_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnModificarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarProveedor_Click" Source="imagenes/edit.png" />
+                            <Image x:Name="btnModificarConfirmarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarConfirmarProveedor_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
+                            <Image x:Name="btnModificarCancelarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCancelarProveedor_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <!--Clientes-->
+            <TabItem x:Name="tabClientes">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel HorizontalAlignment="Left">
+                        <Label Content="Clientes:" FontSize="14" />
+                        <ListView x:Name="lvClientes" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="380" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="523" Width="206" ItemsSource="{Binding Source={StaticResource clientesCompradoresViewSource}}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Border Grid.Column="1" Margin="5,27,5,0" VerticalAlignment="Top" BorderThickness="1">
+                            <Grid VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Label Content="Nombre:" Margin="5" />
+                                <TextBox x:Name="tbxNombreClientes" Margin="5" Grid.Column="1" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <Label Content="Apellidos:" Margin="5" Grid.Row="1" />
+                                <TextBox x:Name="tbxApellidosClientes" Margin="5" Grid.Column="1" Grid.Row="1" Foreground="White" FontSize="16" Background="{x:Null}"  IsReadOnly="True" Text="{Binding Apellidos, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
+                                <Label Content="Dirección:" Margin="5" Grid.Row="2" />
+                                <TextBox x:Name="tbxDireccionClientes" Margin="5" Grid.Column="1" Grid.Row="2" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <Label Content="Telefono:" Margin="5" Grid.Row="3" />
+                                <TextBox x:Name="tbxTelefonoClientes" Margin="5" Grid.Column="1" Grid.Row="3" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <Label Content="DNI:" Margin="5" Grid.Row="4" />
+                                <TextBox x:Name="tbxDNIClientes" TextBoxBase.TextChanged="cbxCategoriaStock_TextChanged" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Background="{x:Null}" Foreground="Black" FontSize="16" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                            </Grid>
+                        </Border>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnAñadirCliente"  HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCliente_Click" Source="imagenes/add.png" Stretch="Fill" />
+                            <Image x:Name="btnAñadirConfirmarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirConfirmarCliente_Click" Source="imagenes/confirm.png" Visibility="Hidden" />
+                            <Image x:Name="btnAñadirCancelarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCancelarCliente_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnEliminarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCliente_Click" Source="imagenes/delete.png" />
+                            <Image x:Name="btnEliminarConfirmarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarConfirmarCliente_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
+                            <Image x:Name="btnEliminarCancelarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCancelarCliente_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="btnModificarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCliente_Click" Source="imagenes/edit.png" />
+                            <Image x:Name="btnModificarConfirmarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarConfirmarCliente_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
+                            <Image x:Name="btnModificarCancelarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCancelarCliente_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <!--Vender-->
+            <TabItem x:Name="tabVender">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel HorizontalAlignment="Left" DataContext="{StaticResource productosViewSource}">
+                        <Label Content="Buscar:" FontSize="14" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="tbxBuscadorVender" Margin="5,0,5,0" MinWidth="170" HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorVender_TextChanged" />
+                            <Image Source="imagenes/search.png" Stretch="UniformToFill" HorizontalAlignment="Right" />
+                        </StackPanel>
+                        <Label Content="Categorías:" FontSize="14" />
+                        <ComboBox x:Name="cbxVender" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                        <Label Content="Productos:" FontSize="14" />
+                        <ListView x:Name="lvVender" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="420" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="0" Width="0" ItemsSource="{Binding Source={StaticResource categoriasProductosViewSource}}" MinWidth="220" />
+                        <Border>
+                            <Image Source="imagenes/add.png" Margin="0,5,0,5" Stretch="None" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Border>
+                            <Grid x:Name="resumenVenta" ShowGridLines="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Label Content="Producto" />
+                                <Label Content="Precio" Grid.Column="1" />
+                                <Label Content="Cantidad" Grid.Column="2" />
+                                <Label Content="Descuento" Grid.Column="3" />
+                                <Label Content="Total" Grid.Column="4" />
+                            </Grid>
+                        </Border>
+                        <DockPanel>
+                            <Image x:Name="eliminarProductoVenta" Source="imagenes/delete.png" Stretch="None" HorizontalAlignment="Left" />
+                            <Image Source="imagenes/discount.png" Stretch="None" HorizontalAlignment="Right" />
+                        </DockPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
