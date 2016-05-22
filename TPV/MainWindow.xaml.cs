@@ -63,7 +63,7 @@ namespace TPV
             // Load data into the table LineasVentas. You can modify this code as needed.
             tPVDataSetLineasVentasTableAdapter = new TPV.TPVDataSetTableAdapters.LineasVentasTableAdapter();
             tPVDataSetLineasVentasTableAdapter.Fill(tPVDataSet.LineasVentas);
-            System.Windows.Data.CollectionViewSource lineasVentasViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("LineasVentasViewSource")));
+            System.Windows.Data.CollectionViewSource lineasVentasViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("lineasVentasViewSource")));
             lineasVentasViewSource.View.MoveCurrentToFirst();
         }
 
@@ -629,7 +629,7 @@ namespace TPV
 
         private void tbxBuscadorVender_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+           tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "nombre like \'%" + tbxBuscadorVender.Text + "%\'";
         }
     }
 }

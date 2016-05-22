@@ -13,6 +13,7 @@
         <CollectionViewSource x:Key="categoriasProductosViewSource" Source="{Binding FK_Categorias_Productos, Source={StaticResource categoriasViewSource}}" />
         <CollectionViewSource x:Key="clientesCompradoresViewSource" Source="{Binding ClientesCompradores, Source={StaticResource tPVDataSet}}" />
         <CollectionViewSource x:Key="clientesVendedoresViewSource" Source="{Binding ClientesVendedores, Source={StaticResource tPVDataSet}}" />
+        <CollectionViewSource x:Key="lineasVentasViewSource" Source="{Binding LineasVentas, Source={StaticResource tPVDataSet}}"/>
     </Window.Resources>
     <Window.Background>
         <ImageBrush ImageSource="imagenes/wallpaper.jpg" />
@@ -335,7 +336,7 @@
                         <Label Content="Categorías:" FontSize="14" />
                         <ComboBox x:Name="cbxVender" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                         <Label Content="Productos:" FontSize="14" />
-                        <ListView x:Name="lvVender" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="420" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="0" Width="0" ItemsSource="{Binding Source={StaticResource categoriasProductosViewSource}}" MinWidth="220" />
+                        <ListView x:Name="lvVender" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="420" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="0" Width="0" ItemsSource="{Binding}" MinWidth="220" />
                         <Border>
                             <Image Source="imagenes/add.png" Margin="0,5,0,5" Stretch="None" />
                         </Border>
