@@ -22,8 +22,12 @@ namespace TPV
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Producto añadidos a la ventana de venta
+        List<DataRow> productosVenta;
+        // Numero de productos añadidos a la ventana de venta
+        int numProductosResumen;
+
         private TPV.TPVDataSetTableAdapters.ProductosTableAdapter tPVDataSetProductosTableAdapter;
-        private TPV.TPVDataSetTableAdapters.CategoriasTableAdapter tPVDataSetCategoriasTableAdapter;
         private TPV.TPVDataSetTableAdapters.ClientesCompradoresTableAdapter tPVDataSetClientesCompradoresTableAdapter;
         private TPV.TPVDataSetTableAdapters.ClientesVendedoresTableAdapter tPVDataSetClientesVendedoresTableAdapter;
         private TPV.TPVDataSetTableAdapters.LineasVentasTableAdapter tPVDataSetLineasVentasTableAdapter;
@@ -39,17 +43,14 @@ namespace TPV
         {
             tabControl.Visibility = Visibility.Hidden;
 
+            productosVenta = new List<DataRow>();
+
             tPVDataSet = ((TPV.TPVDataSet)(this.FindResource("tPVDataSet")));
             // Load data into the table Productos. You can modify this code as needed.
             tPVDataSetProductosTableAdapter = new TPV.TPVDataSetTableAdapters.ProductosTableAdapter();
             tPVDataSetProductosTableAdapter.Fill(tPVDataSet.Productos);
             System.Windows.Data.CollectionViewSource productosViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("productosViewSource")));
             productosViewSource.View.MoveCurrentToFirst();
-            // Load data into the table Categorias. You can modify this code as needed.
-            tPVDataSetCategoriasTableAdapter = new TPV.TPVDataSetTableAdapters.CategoriasTableAdapter();
-            tPVDataSetCategoriasTableAdapter.Fill(tPVDataSet.Categorias);
-            System.Windows.Data.CollectionViewSource categoriasViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("categoriasViewSource")));
-            categoriasViewSource.View.MoveCurrentToFirst();
             // Load data into the table ClientesCompradores. You can modify this code as needed.
             tPVDataSetClientesCompradoresTableAdapter = new TPV.TPVDataSetTableAdapters.ClientesCompradoresTableAdapter();
             tPVDataSetClientesCompradoresTableAdapter.Fill(tPVDataSet.ClientesCompradores);
@@ -210,7 +211,7 @@ namespace TPV
                 DataRow row = tPVDataSet.Tables["Productos"].NewRow();
 
                 row["Nombre"] = tbxNombreStock.Text;
-                row["Descripcion"] = tbxDescripcionStock.Text;                
+                row["Descripcion"] = tbxDescripcionStock.Text;
                 row["Precio"] = Convert.ToDecimal(tbxPrecioStock.Text);
                 row["Cantidad"] = Convert.ToInt32(tbxCantidadStock.Text);
                 //row["idCategoria"] = cbxCategoriaStock.SelectedValue.ToString();
@@ -246,16 +247,6 @@ namespace TPV
 
         private void btnAñadirCategoriaStock_Click(object sender, RoutedEventArgs e)
         {
-            DataRow row = tPVDataSet.Tables["Categorias"].NewRow();
-            row["Nombre"] = cbxCategoriaStock.Text;
-
-            tPVDataSet.Tables["Categorias"].Rows.Add(row);
-
-            tPVDataSetCategoriasTableAdapter.Update(tPVDataSet);
-
-            btnAñadirCategoriaStock.IsEnabled = true;
-
-            cbxCategoriaStock.Text = "";
         }
 
         private void cbxCategoriaStock_TextChanged(object sender, RoutedEventArgs e)
@@ -625,11 +616,82 @@ namespace TPV
             tabVender.IsSelected = true;
         }
 
-        #endregion
-
         private void tbxBuscadorVender_TextChanged(object sender, TextChangedEventArgs e)
         {
-           tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "nombre like \'%" + tbxBuscadorVender.Text + "%\'";
+            tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "nombre like \'%" + tbxBuscadorVender.Text + "%\'";
         }
+
+        private void btnAñadirProductoVenta_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var selectedItem = lvVender.SelectedItem as DataRowView;
+
+            try
+            {
+                DataRow row = tPVDataSet.Tables["Productos"].Rows.Find(selectedItem["id"]);
+
+                productosVenta.Add(row);
+
+                RowDefinition r = new RowDefinition();
+
+                resumenVenta.RowDefinitions.Add(r);
+
+                Label nombre = new Label();
+                nombre.Content = row[1];
+
+                nombre.SetValue(Grid.RowProperty, productosVenta.Count);
+                nombre.SetValue(Grid.ColumnProperty, 0);
+
+                resumenVenta.Children.Add(nombre);
+
+                Label precio = new Label();
+                precio.Content = row[4];
+
+                precio.SetValue(Grid.RowProperty, productosVenta.Count);
+                precio.SetValue(Grid.ColumnProperty, 1);
+
+                resumenVenta.Children.Add(precio);
+
+                Label cantidad = new Label();
+                cantidad.Content = tbxCantidadVender.Text;
+
+                cantidad.SetValue(Grid.RowProperty, productosVenta.Count);
+                cantidad.SetValue(Grid.ColumnProperty, 2);
+
+                resumenVenta.Children.Add(cantidad);
+
+                Label total = new Label();
+                total.Content = Convert.ToDecimal(precio.Content) * Convert.ToInt32(cantidad.Content);
+
+                total.SetValue(Grid.RowProperty, productosVenta.Count);
+                total.SetValue(Grid.ColumnProperty, 3);
+
+                resumenVenta.Children.Add(total);
+
+                tbxCantidadVender.Clear();
+
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            añadirDescuento.Visibility = Visibility.Visible;
+        }
+
+        private void btnConfirmarAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void btnCancelarAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+
+        #endregion
     }
 }

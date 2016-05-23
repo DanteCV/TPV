@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TPV"
         mc:Ignorable="d"
-        Title="TPV" Height="768" Width="1024" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded">
+        Title="TPV" Height="768" Width="1024" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <local:TPVDataSet x:Key="tPVDataSet" />
         <CollectionViewSource x:Key="productosViewSource" Source="{Binding Productos, Source={StaticResource tPVDataSet}}" />
@@ -329,17 +329,19 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel HorizontalAlignment="Left" DataContext="{StaticResource productosViewSource}">
                         <Label Content="Buscar:" FontSize="14" />
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox x:Name="tbxBuscadorVender" Margin="5,0,5,0" MinWidth="170" HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorVender_TextChanged" />
-                            <Image Source="imagenes/search.png" Stretch="UniformToFill" HorizontalAlignment="Right" />
-                        </StackPanel>
+                        <DockPanel>
+                            <TextBox x:Name="tbxBuscadorVender" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorVender_TextChanged" MinHeight="25" />
+                        </DockPanel>
                         <Label Content="Categorías:" FontSize="14" />
                         <ComboBox x:Name="cbxVender" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                         <Label Content="Productos:" FontSize="14" />
                         <ListView x:Name="lvVender" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="420" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="0" Width="0" ItemsSource="{Binding}" MinWidth="220" />
-                        <Border>
-                            <Image Source="imagenes/add.png" Margin="0,5,0,5" Stretch="None" />
-                        </Border>
+                        <DockPanel>
+                            <TextBox x:Name="tbxCantidadVender" MinWidth="60" Margin="5" Background="#59000000" TextAlignment="Center" FontSize="16" Foreground="White" MaxLines="1" TextWrapping="Wrap"/>
+                            <Border x:Name="btnAñadirProductoVenta" MouseLeftButtonUp="btnAñadirProductoVenta_MouseLeftButtonUp">
+                                <Image Source="imagenes/add.png" Margin="0,5,0,5" Stretch="None" />
+                            </Border>
+                        </DockPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <Border>
@@ -357,14 +359,32 @@
                                 <Label Content="Producto" />
                                 <Label Content="Precio" Grid.Column="1" />
                                 <Label Content="Cantidad" Grid.Column="2" />
-                                <Label Content="Descuento" Grid.Column="3" />
-                                <Label Content="Total" Grid.Column="4" />
+                                <Label Content="Total" Grid.Column="3" />
+                                <Label Content="Descuento" Grid.Column="4" />
                             </Grid>
                         </Border>
                         <DockPanel>
-                            <Image x:Name="eliminarProductoVenta" Source="imagenes/delete.png" Stretch="None" HorizontalAlignment="Left" />
-                            <Image Source="imagenes/discount.png" Stretch="None" HorizontalAlignment="Right" />
+                            <Image x:Name="btnEliminarProductoVenta" Source="imagenes/delete.png" Stretch="None" HorizontalAlignment="Left" Margin="5,5,0,0" />
+                            <Image x:Name="btnAñadirDescuento" Source="imagenes/discount.png" Stretch="None" HorizontalAlignment="Right" Margin="0,5,5,0" MouseLeftButtonUp="btnAñadirDescuento_MouseLeftButtonUp" />
                         </DockPanel>
+                        <Border x:Name="añadirDescuento" HorizontalAlignment="Right" Visibility="Visible">
+                            <StackPanel>
+                                <Label Content="Añadir descuento:"/>
+                                <DockPanel>
+                                    <Label Content="Producto:"/>
+                                    <TextBox MinWidth="150" Height="25" Background="#59000000"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <Label Content="Cantidad:"/>
+                                    <TextBox MinWidth="50" Height="25" Background="#59000000"/>
+                                    <Label Content="%" DockPanel.Dock="Right"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <Image x:Name="btnConfirmarAñadirDescuento" Source="imagenes/add.png" Stretch="None" Margin="5,5,5,7" MouseLeftButtonUp="btnConfirmarAñadirDescuento_MouseLeftButtonUp"/>
+                                    <Image x:Name="btnCancelarAñadirDescuento" Source="imagenes/cancel.png" Stretch="None" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="5,5,5,7" MouseLeftButtonUp="btnCancelarAñadirDescuento_MouseLeftButtonUp"/>
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Grid>
             </TabItem>
