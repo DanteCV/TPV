@@ -22,10 +22,10 @@ namespace TPV
     /// </summary>
     public partial class MainWindow : Window
     {
-        // Producto añadidos a la ventana de venta
-        List<DataRow> productosVenta;
         // Numero de productos añadidos a la ventana de venta
         int numProductosResumen;
+        // Productos disponibles para añadir descuento
+        string[] productosDescuentos;
 
         private TPV.TPVDataSetTableAdapters.ProductosTableAdapter tPVDataSetProductosTableAdapter;
         private TPV.TPVDataSetTableAdapters.ClientesCompradoresTableAdapter tPVDataSetClientesCompradoresTableAdapter;
@@ -42,8 +42,6 @@ namespace TPV
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             tabControl.Visibility = Visibility.Hidden;
-
-            productosVenta = new List<DataRow>();
 
             tPVDataSet = ((TPV.TPVDataSet)(this.FindResource("tPVDataSet")));
             // Load data into the table Productos. You can modify this code as needed.
@@ -627,47 +625,52 @@ namespace TPV
 
             try
             {
+                DataRow cabecera = tPVDataSet.Tables["Productos"].NewRow();
+                DataRow linea = tPVDataSet.Tables["Productos"].NewRow();
+
                 DataRow row = tPVDataSet.Tables["Productos"].Rows.Find(selectedItem["id"]);
 
-                productosVenta.Add(row);
+                numProductosResumen++;
 
-                RowDefinition r = new RowDefinition();
+                var data = new Producto { }
 
-                resumenVenta.RowDefinitions.Add(r);
+                //RowDefinition r = new RowDefinition();
 
-                Label nombre = new Label();
-                nombre.Content = row[1];
+                //resumenVenta.RowDefinitions.Add(r);
 
-                nombre.SetValue(Grid.RowProperty, productosVenta.Count);
-                nombre.SetValue(Grid.ColumnProperty, 0);
+                //Label nombre = new Label();
+                //nombre.Content = row[1];
 
-                resumenVenta.Children.Add(nombre);
+                //nombre.SetValue(Grid.RowProperty, numProductosResumen);
+                //nombre.SetValue(Grid.ColumnProperty, 0);
 
-                Label precio = new Label();
-                precio.Content = row[4];
+                //resumenVenta.Children.Add(nombre);
 
-                precio.SetValue(Grid.RowProperty, productosVenta.Count);
-                precio.SetValue(Grid.ColumnProperty, 1);
+                //Label precio = new Label();
+                //precio.Content = row[4];
 
-                resumenVenta.Children.Add(precio);
+                //precio.SetValue(Grid.RowProperty, numProductosResumen);
+                //precio.SetValue(Grid.ColumnProperty, 1);
 
-                Label cantidad = new Label();
-                cantidad.Content = tbxCantidadVender.Text;
+                //resumenVenta.Children.Add(precio);
 
-                cantidad.SetValue(Grid.RowProperty, productosVenta.Count);
-                cantidad.SetValue(Grid.ColumnProperty, 2);
+                //Label cantidad = new Label();
+                //cantidad.Content = tbxCantidadVender.Text;
 
-                resumenVenta.Children.Add(cantidad);
+                //cantidad.SetValue(Grid.RowProperty, numProductosResumen);
+                //cantidad.SetValue(Grid.ColumnProperty, 2);
 
-                Label total = new Label();
-                total.Content = Convert.ToDecimal(precio.Content) * Convert.ToInt32(cantidad.Content);
+                //resumenVenta.Children.Add(cantidad);
 
-                total.SetValue(Grid.RowProperty, productosVenta.Count);
-                total.SetValue(Grid.ColumnProperty, 3);
+                //Label total = new Label();
+                //total.Content = Convert.ToDecimal(precio.Content) * Convert.ToInt32(cantidad.Content);
 
-                resumenVenta.Children.Add(total);
+                //total.SetValue(Grid.RowProperty, numProductosResumen);
+                //total.SetValue(Grid.ColumnProperty, 3);
 
-                tbxCantidadVender.Clear();
+                //resumenVenta.Children.Add(total);
+
+                //tbxCantidadVender.Clear();
 
             }
             catch (Exception exception)
@@ -679,16 +682,21 @@ namespace TPV
         private void btnAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             añadirDescuento.Visibility = Visibility.Visible;
+
+            foreach(Label lab in resumenVenta)
+            {
+
+            }
         }
 
         private void btnConfirmarAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-
+            añadirDescuento.Visibility = Visibility.Hidden;
         }
 
         private void btnCancelarAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-
+            añadirDescuento.Visibility = Visibility.Hidden;
         }
 
 
