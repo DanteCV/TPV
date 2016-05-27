@@ -161,7 +161,7 @@ namespace TPV
 
                 tPVDataSet.Tables["Productos"].Rows.Remove(row);
 
-                tPVDataSetClientesVendedoresTableAdapter.Update(tPVDataSet);
+                tPVDataSetProductosTableAdapter.Update(tPVDataSet);
 
                 btnAñadirStock.IsEnabled = true;
                 btnEliminarStock.IsEnabled = true;
@@ -206,7 +206,7 @@ namespace TPV
 
             try
             {
-                DataRow row = tPVDataSet.Tables["Productos"].NewRow();
+                DataRow row = tPVDataSet.Tables["Productos"].Rows.Find(selecteditem["id"]);
 
                 row["Nombre"] = tbxNombreStock.Text;
                 row["Descripcion"] = tbxDescripcionStock.Text;
@@ -214,7 +214,7 @@ namespace TPV
                 row["Cantidad"] = Convert.ToInt32(tbxCantidadStock.Text);
                 //row["idCategoria"] = cbxCategoriaStock.SelectedValue.ToString();
 
-                tPVDataSetClientesVendedoresTableAdapter.Update(tPVDataSet);
+                tPVDataSetProductosTableAdapter.Update(tPVDataSet);
 
                 btnAñadirStock.IsEnabled = true;
                 btnEliminarStock.IsEnabled = true;
@@ -632,74 +632,51 @@ namespace TPV
 
                 numProductosResumen++;
 
-                var data = new Producto { }
+                RowDefinition r = new RowDefinition();
+                r.Height = new GridLength(30);
 
-                //RowDefinition r = new RowDefinition();
+                resumenVenta.RowDefinitions.Add(r);
 
-                //resumenVenta.RowDefinitions.Add(r);
+                Label nombre = new Label();
+                nombre.Content = row[1];
 
-                //Label nombre = new Label();
-                //nombre.Content = row[1];
+                nombre.SetValue(Grid.RowProperty, numProductosResumen);
+                nombre.SetValue(Grid.ColumnProperty, 0);
 
-                //nombre.SetValue(Grid.RowProperty, numProductosResumen);
-                //nombre.SetValue(Grid.ColumnProperty, 0);
+                resumenVenta.Children.Add(nombre);
 
-                //resumenVenta.Children.Add(nombre);
+                Label precio = new Label();
+                precio.Content = row[4];
 
-                //Label precio = new Label();
-                //precio.Content = row[4];
+                precio.SetValue(Grid.RowProperty, numProductosResumen);
+                precio.SetValue(Grid.ColumnProperty, 1);
 
-                //precio.SetValue(Grid.RowProperty, numProductosResumen);
-                //precio.SetValue(Grid.ColumnProperty, 1);
+                resumenVenta.Children.Add(precio);
 
-                //resumenVenta.Children.Add(precio);
+                Label cantidad = new Label();
+                cantidad.Content = tbxCantidadVender.Text;
 
-                //Label cantidad = new Label();
-                //cantidad.Content = tbxCantidadVender.Text;
+                cantidad.SetValue(Grid.RowProperty, numProductosResumen);
+                cantidad.SetValue(Grid.ColumnProperty, 2);
 
-                //cantidad.SetValue(Grid.RowProperty, numProductosResumen);
-                //cantidad.SetValue(Grid.ColumnProperty, 2);
+                resumenVenta.Children.Add(cantidad);
 
-                //resumenVenta.Children.Add(cantidad);
+                Label total = new Label();
+                total.Content = Convert.ToDecimal(precio.Content) * Convert.ToInt32(cantidad.Content);
 
-                //Label total = new Label();
-                //total.Content = Convert.ToDecimal(precio.Content) * Convert.ToInt32(cantidad.Content);
+                total.SetValue(Grid.RowProperty, numProductosResumen);
+                total.SetValue(Grid.ColumnProperty, 3);
 
-                //total.SetValue(Grid.RowProperty, numProductosResumen);
-                //total.SetValue(Grid.ColumnProperty, 3);
+                resumenVenta.Children.Add(total);
 
-                //resumenVenta.Children.Add(total);
-
-                //tbxCantidadVender.Clear();
+                tbxCantidadVender.Clear();
 
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void btnAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            añadirDescuento.Visibility = Visibility.Visible;
-
-            foreach(Label lab in resumenVenta)
-            {
-
-            }
-        }
-
-        private void btnConfirmarAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            añadirDescuento.Visibility = Visibility.Hidden;
-        }
-
-        private void btnCancelarAñadirDescuento_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            añadirDescuento.Visibility = Visibility.Hidden;
-        }
-
-
+        }     
         #endregion
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TPV"
         mc:Ignorable="d"
-        Title="TPV" Height="768" Width="1024" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded" SizeToContent="WidthAndHeight">
+        Title="TPV" Height="1000" Width="1280" WindowStyle="ThreeDBorderWindow" Loaded="Window_Loaded">
     <Window.Resources>
         <local:TPVDataSet x:Key="tPVDataSet" />
         <CollectionViewSource x:Key="productosViewSource" Source="{Binding Productos, Source={StaticResource tPVDataSet}}" />
@@ -344,18 +344,17 @@
                         </DockPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <Border>
-                            
-                        <Grid x:Name="resumenVenta" >
+                        <Border x:Name="border">
+                            <Grid x:Name="resumenVenta" >
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition  />
                                     <ColumnDefinition />
                                     <ColumnDefinition />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition />
+                                    <RowDefinition Height="30"/>
                                 </Grid.RowDefinitions>
                                 <Label Content="Producto" />
                                 <Label Content="Precio" Grid.Column="1" />
@@ -363,30 +362,11 @@
                                 <Label Content="Total" Grid.Column="3" />
                                 <Label Content="Descuento" Grid.Column="4" />
                             </Grid>
-                        
                         </Border>
                         <DockPanel>
                             <Image x:Name="btnEliminarProductoVenta" Source="imagenes/delete.png" Stretch="None" HorizontalAlignment="Left" Margin="5,5,0,0" />
-                            <Image x:Name="btnAñadirDescuento" Source="imagenes/discount.png" Stretch="None" HorizontalAlignment="Right" Margin="0,5,5,0" MouseLeftButtonUp="btnAñadirDescuento_MouseLeftButtonUp" />
+                            <Image x:Name="btnAñadirDescuento" Source="imagenes/discount.png" Stretch="None" HorizontalAlignment="Right" Margin="0,5,5,0" />
                         </DockPanel>
-                        <Border x:Name="añadirDescuento" HorizontalAlignment="Right" Visibility="Visible">
-                            <StackPanel>
-                                <Label Content="Añadir descuento:"/>
-                                <DockPanel>
-                                    <Label Content="Producto:"/>
-                                    <TextBox MinWidth="150" Height="25" Background="#59000000"/>
-                                </DockPanel>
-                                <DockPanel>
-                                    <Label Content="Cantidad:"/>
-                                    <TextBox MinWidth="50" Height="25" Background="#59000000"/>
-                                    <Label Content="%" DockPanel.Dock="Right"/>
-                                </DockPanel>
-                                <DockPanel>
-                                    <Image x:Name="btnConfirmarAñadirDescuento" Source="imagenes/add.png" Stretch="None" Margin="5,5,5,7" MouseLeftButtonUp="btnConfirmarAñadirDescuento_MouseLeftButtonUp"/>
-                                    <Image x:Name="btnCancelarAñadirDescuento" Source="imagenes/cancel.png" Stretch="None" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="5,5,5,7" MouseLeftButtonUp="btnCancelarAñadirDescuento_MouseLeftButtonUp"/>
-                                </DockPanel>
-                            </StackPanel>
-                        </Border>
                     </StackPanel>
                 </Grid>
             </TabItem>
