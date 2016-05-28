@@ -6,3 +6,10 @@
     {
     }
 }
+
+namespace TPV.TPVDataSetTableAdapters {
+    
+    
+    public partial class ClientesVendedoresTableAdapter {
+    }
+}

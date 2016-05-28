@@ -24,13 +24,19 @@ namespace TPV
     {
         // Numero de productos añadidos a la ventana de venta
         int numProductosResumen;
-        // Productos disponibles para añadir descuento
-        string[] productosDescuentos;
+        // Total de la venta
+        decimal totalVenta;
+        // id de cabecera de venta
+        int idCabeceraVenta;
+
+        // Datos de la tabla resumen de venta
+        DataTable dataTableResumenVenta;
 
         private TPV.TPVDataSetTableAdapters.ProductosTableAdapter tPVDataSetProductosTableAdapter;
         private TPV.TPVDataSetTableAdapters.ClientesCompradoresTableAdapter tPVDataSetClientesCompradoresTableAdapter;
         private TPV.TPVDataSetTableAdapters.ClientesVendedoresTableAdapter tPVDataSetClientesVendedoresTableAdapter;
         private TPV.TPVDataSetTableAdapters.LineasVentasTableAdapter tPVDataSetLineasVentasTableAdapter;
+        private TPV.TPVDataSetTableAdapters.CabecerasVentasTableAdapter tPVDataSetCabecerasVentasTableAdapter;
 
         private TPV.TPVDataSet tPVDataSet;
 
@@ -41,7 +47,8 @@ namespace TPV
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            tabControl.Visibility = Visibility.Hidden;
+            numProductosResumen = 0;
+            totalVenta = 0;
 
             tPVDataSet = ((TPV.TPVDataSet)(this.FindResource("tPVDataSet")));
             // Load data into the table Productos. You can modify this code as needed.
@@ -59,12 +66,52 @@ namespace TPV
             tPVDataSetClientesVendedoresTableAdapter.Fill(tPVDataSet.ClientesVendedores);
             System.Windows.Data.CollectionViewSource clientesVendedoresViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("clientesVendedoresViewSource")));
             clientesVendedoresViewSource.View.MoveCurrentToFirst();
+            // Load data into the table CabecerasVentas. You can modify this code as needed.
+            tPVDataSetCabecerasVentasTableAdapter = new TPV.TPVDataSetTableAdapters.CabecerasVentasTableAdapter();
+            tPVDataSetCabecerasVentasTableAdapter.Fill(tPVDataSet.CabecerasVentas);
+            System.Windows.Data.CollectionViewSource cabecerasVentasViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("cabecerasVentasViewSource")));
+            cabecerasVentasViewSource.View.MoveCurrentToFirst();
             // Load data into the table LineasVentas. You can modify this code as needed.
             tPVDataSetLineasVentasTableAdapter = new TPV.TPVDataSetTableAdapters.LineasVentasTableAdapter();
             tPVDataSetLineasVentasTableAdapter.Fill(tPVDataSet.LineasVentas);
             System.Windows.Data.CollectionViewSource lineasVentasViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("lineasVentasViewSource")));
             lineasVentasViewSource.View.MoveCurrentToFirst();
-        }
+
+            DataView view = new DataView(tPVDataSet.Tables["Productos"]);
+            DataTable distinctCategorias = view.ToTable(true,"Categoria");
+            
+            cbxCategoriasStock.ItemsSource = distinctCategorias.DefaultView;
+            cbxCategoriasStock.SelectedValuePath = "Categoria";
+            cbxCategoriasStock.DisplayMemberPath = "Categoria";
+
+            cbxAñadirCategoriaStock.ItemsSource = distinctCategorias.DefaultView;
+            cbxAñadirCategoriaStock.SelectedValuePath = "Categoria";
+            cbxAñadirCategoriaStock.DisplayMemberPath = "Categoria";
+
+            dataTableResumenVenta = new DataTable("resumenVenta");
+            dataTableResumenVenta.Columns.Add("Producto");
+            dataTableResumenVenta.Columns.Add("Precio");
+            dataTableResumenVenta.Columns.Add("Cantidad");
+            dataTableResumenVenta.Columns.Add("Descuento");
+            dataTableResumenVenta.Columns.Add("Total");
+
+            for (int i = 0; i < dataTableResumenVenta.Columns.Count; i++)
+            {
+                dataTableResumenVenta.Columns[i].ReadOnly = true;
+            }
+
+            dataTableResumenVenta.RowDeleted += new DataRowChangeEventHandler(resumenVentaRow_Deleted);
+            dataTableResumenVenta.TableNewRow += new DataTableNewRowEventHandler(resumenVentaRow_Added);
+
+            resumenVenta.DataContext = dataTableResumenVenta.DefaultView;
+
+            tabControl.Visibility = Visibility.Hidden;
+
+            cbxClienteVentas.SelectedItem = null;
+
+            lvStock.SelectedItem = null;
+
+        }       
 
         #region Stock
 
@@ -74,9 +121,16 @@ namespace TPV
             tabStock.IsSelected = true;
         }
 
+        private void cbxCategoriasStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedCategoria = cbxCategoriasStock.SelectedItem as DataRowView;
+
+            tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "Categoria like \'%" + selectedCategoria["Categoria"] + "%\'";
+        }
+
         private void btnAñadirStock_Click(object sender, RoutedEventArgs e)
         {
-            cbxStock.SelectedItem = null;
+            cbxCategoriasStock.SelectedItem = null;
             lvStock.SelectedItem = null;
 
             btnAñadirConfirmarStock.Visibility = Visibility.Visible;
@@ -91,6 +145,8 @@ namespace TPV
             btnEliminarStock.IsEnabled = false;
             btnModificarStock.IsEnabled = false;
 
+            cbxAñadirCategoriaStock.IsHitTestVisible = true;
+
             tbxCantidadStock.IsReadOnly = tbxDescripcionStock.IsReadOnly = tbxNombreStock.IsReadOnly = tbxPrecioStock.IsReadOnly = false;
         }
 
@@ -101,9 +157,9 @@ namespace TPV
                 DataRow row = tPVDataSet.Tables["Productos"].NewRow();
                 row["Nombre"] = tbxNombreStock.Text;
                 row["Descripcion"] = tbxDescripcionStock.Text;
-                //row["idCategoria"] = cbxCategoriaStock.SelectedValue.ToString();
-                row["Precio"] = Convert.ToDecimal(tbxPrecioStock.Text);
+                row["Precio"] = Convert.ToDecimal(tbxPrecioStock.Text.Replace(".", ","));
                 row["Cantidad"] = Convert.ToInt32(tbxCantidadStock.Text);
+                row["Categoria"] = cbxAñadirCategoriaStock.SelectedValue.ToString();
 
                 tPVDataSet.Tables["Productos"].Rows.Add(row);
 
@@ -121,6 +177,8 @@ namespace TPV
                 btnAñadirConfirmarStock.Visibility = Visibility.Hidden;
                 btnAñadirCancelarStock.Visibility = Visibility.Hidden;
 
+                cbxAñadirCategoriaStock.IsHitTestVisible = false;
+
                 tbxCantidadStock.IsReadOnly = tbxDescripcionStock.IsReadOnly = tbxNombreStock.IsReadOnly = tbxPrecioStock.IsReadOnly = true;
             }
             catch (Exception exception)
@@ -137,6 +195,8 @@ namespace TPV
 
             btnAñadirConfirmarStock.Visibility = Visibility.Hidden;
             btnAñadirCancelarStock.Visibility = Visibility.Hidden;
+
+            cbxAñadirCategoriaStock.IsHitTestVisible = false;
 
             tbxCantidadStock.IsReadOnly = tbxDescripcionStock.IsReadOnly = tbxNombreStock.IsReadOnly = tbxPrecioStock.IsReadOnly = true;
         }
@@ -197,6 +257,8 @@ namespace TPV
             btnEliminarStock.IsEnabled = false;
             btnModificarStock.IsEnabled = false;
 
+            cbxAñadirCategoriaStock.IsHitTestVisible = true;
+
             tbxNombreStock.IsReadOnly = tbxDescripcionStock.IsReadOnly = tbxCantidadStock.IsReadOnly = tbxPrecioStock.IsReadOnly = false;
         }
 
@@ -210,9 +272,9 @@ namespace TPV
 
                 row["Nombre"] = tbxNombreStock.Text;
                 row["Descripcion"] = tbxDescripcionStock.Text;
-                row["Precio"] = Convert.ToDecimal(tbxPrecioStock.Text);
+                row["Precio"] = Convert.ToDecimal(tbxPrecioStock.Text.Replace(".", ","));
                 row["Cantidad"] = Convert.ToInt32(tbxCantidadStock.Text);
-                //row["idCategoria"] = cbxCategoriaStock.SelectedValue.ToString();
+                row["Categoria"] = cbxAñadirCategoriaStock.Text;
 
                 tPVDataSetProductosTableAdapter.Update(tPVDataSet);
 
@@ -222,6 +284,9 @@ namespace TPV
 
                 btnModificarConfirmarStock.Visibility = Visibility.Hidden;
                 btnModificarCancelarStock.Visibility = Visibility.Hidden;
+                cbxAñadirCategoriaStock.IsEditable =
+
+                cbxAñadirCategoriaStock.IsHitTestVisible = false;
 
                 tbxNombreStock.IsReadOnly = tbxDescripcionStock.IsReadOnly = tbxCantidadStock.IsReadOnly = tbxPrecioStock.IsReadOnly = true;
             }
@@ -240,16 +305,13 @@ namespace TPV
             btnModificarConfirmarStock.Visibility = Visibility.Hidden;
             btnModificarCancelarStock.Visibility = Visibility.Hidden;
 
+            cbxAñadirCategoriaStock.IsHitTestVisible = false;
+
             tbxNombreStock.IsReadOnly = tbxDescripcionStock.IsReadOnly = tbxCantidadStock.IsReadOnly = tbxPrecioStock.IsReadOnly = true;
         }
 
         private void btnAñadirCategoriaStock_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void cbxCategoriaStock_TextChanged(object sender, RoutedEventArgs e)
-        {
-            btnAñadirCategoriaStock.IsEnabled = true;
         }
 
         #endregion Stock
@@ -547,6 +609,14 @@ namespace TPV
 
         private void btnEliminarCancelarCliente_Click(object sender, RoutedEventArgs e)
         {
+            btnAñadirCliente.IsEnabled = true;
+            btnEliminarCliente.IsEnabled = true;
+            btnModificarCliente.IsEnabled = true;
+
+            btnEliminarConfirmarCliente.Visibility = Visibility.Hidden;
+            btnEliminarCancelarCliente.Visibility = Visibility.Hidden;
+
+            tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
         }
 
         private void btnModificarCliente_Click(object sender, RoutedEventArgs e)
@@ -621,80 +691,93 @@ namespace TPV
 
         private void btnAñadirProductoVenta_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            var selectedItem = lvVender.SelectedItem as DataRowView;
+            var productoSeleccionado = lvVender.SelectedItem as DataRowView;
+            var clienteSeleccionado = cbxClienteVentas.SelectedItem as DataRowView;
 
-            try
+            if (tbxCantidadVender.Text.Length > 0)
             {
-                DataRow cabecera = tPVDataSet.Tables["Productos"].NewRow();
-                DataRow linea = tPVDataSet.Tables["Productos"].NewRow();
+                if (cbxClienteVentas.SelectedItem != null)
+                {
+                    try
+                    {
+                        DataRow row = tPVDataSet.Tables["Productos"].Rows.Find(productoSeleccionado["id"]);
 
-                DataRow row = tPVDataSet.Tables["Productos"].Rows.Find(selectedItem["id"]);
+                        decimal precio = Convert.ToDecimal(row["precio"]);
+                        int cantidad = Convert.ToInt32(tbxCantidadVender.Text);
 
-                numProductosResumen++;
+                        DataRow r = dataTableResumenVenta.NewRow();
+                        r["Producto"] = row["nombre"];
+                        r["Precio"] = row["precio"];
+                        r["Cantidad"] = tbxCantidadVender.Text;
+                        r["Total"] = precio * cantidad;
 
-                RowDefinition r = new RowDefinition();
-                r.Height = new GridLength(30);
+                        dataTableResumenVenta.Rows.Add(r);
 
-                resumenVenta.RowDefinitions.Add(r);
+                        DataRow lineaVenta = tPVDataSet.Tables["LineasVentas"].NewRow();
 
-                //Nombre del producto
-                AddLabelToGridResumenVentas(row[1].ToString(), numProductosResumen, 0);
+                        if (numProductosResumen == 0)
+                        {
+                            DataRow cabeceraVenta = tPVDataSet.Tables["CabecerasVentas"].NewRow();
+                            cabeceraVenta["idCliente"] = clienteSeleccionado["id"];
+                            cabeceraVenta["fecha"] = DateTime.Now;
+                            idCabeceraVenta = Convert.ToInt32(cabeceraVenta["id"]);
+                            tPVDataSet.Tables["CabecerasVentas"].Rows.Add(cabeceraVenta);
+                        }
 
-                AddSplitterToGridResumenVentas(numProductosResumen, 1);
+                        lineaVenta["idCabecera"] = idCabeceraVenta;
+                        lineaVenta["idProducto"] = productoSeleccionado["id"];
+                        lineaVenta["Cantidad"] = Convert.ToInt32(tbxCantidadVender.Text);
+                        lineaVenta["PrecioTotal"] = precio * cantidad;
 
-                //Precio
-                AddLabelToGridResumenVentas(row[4].ToString(), numProductosResumen, 2);
-                decimal precio = Convert.ToDecimal(row[4]);
+                        numProductosResumen++;
 
-                AddSplitterToGridResumenVentas(numProductosResumen, 3);
+                        tPVDataSet.Tables["LineasVentas"].Rows.Add(lineaVenta);
 
-                //Cantidad
-                AddLabelToGridResumenVentas(tbxCantidadStock.Text, numProductosResumen, 4);
-                int cantidad = Convert.ToInt32(tbxCantidadStock.Text);
+                        totalVenta += precio * cantidad;
 
-                AddSplitterToGridResumenVentas(numProductosResumen, 5);
-
-                //Total
-                string total =(precio * cantidad).ToString();
-                AddLabelToGridResumenVentas(total, numProductosResumen, 6);
-
-                AddSplitterToGridResumenVentas(numProductosResumen, 7);
-
-                tbxCantidadVender.Clear();
-
+                        tbxTotalVenta.Text = totalVenta.ToString();
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Debe seleccionar un cliente antes de poder añadir un producto.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (Exception exception)
+            else
             {
-                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Debe seleccionar una cantidad antes de poder añadir un producto.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }     
+        }
+
+        private void btnTerminarVenta_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                tPVDataSetCabecerasVentasTableAdapter.Update(tPVDataSet);
+                tPVDataSetLineasVentasTableAdapter.Update(tPVDataSet);
+            }
+        }
+
+        private void resumenVentaRow_Added(object sender, DataTableNewRowEventArgs e)
+        {
+                btnTerminarVenta.IsEnabled = true;
+        }
+
+        private void resumenVentaRow_Deleted(object sender, DataRowChangeEventArgs e)
+        {
+            numProductosResumen--;
+
+            if (numProductosResumen == 0)
+            {
+                tPVDataSet.Tables["CabecerasVentas"].Rows.Find(idCabeceraVenta).Delete();
+                btnTerminarVenta.IsEnabled = false;
+            }
+        }
         #endregion
-
-        public void AddLabelToGridResumenVentas(String content, int row, int column)
-        {
-            Label label = new Label();
-            label.Content = content;
-
-            label.SetValue(Grid.RowProperty, row);
-            label.SetValue(Grid.ColumnProperty, column);
-
-            resumenVenta.Children.Add(label);
-        }
-
-        public void AddSplitterToGridResumenVentas(int row, int column)
-        {
-            GridSplitter splitter = new GridSplitter();
-
-            splitter.SetValue(Grid.RowProperty, row);
-            splitter.SetValue(Grid.ColumnProperty, column);
-
-            splitter.Width = 1;
-
-            splitter.HorizontalAlignment = HorizontalAlignment.Center;
-
-            resumenVenta.Children.Add(splitter);
-        }
-
-
+               
     }
 }

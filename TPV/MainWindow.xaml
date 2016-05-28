@@ -14,6 +14,8 @@
         <CollectionViewSource x:Key="clientesCompradoresViewSource" Source="{Binding ClientesCompradores, Source={StaticResource tPVDataSet}}" />
         <CollectionViewSource x:Key="clientesVendedoresViewSource" Source="{Binding ClientesVendedores, Source={StaticResource tPVDataSet}}" />
         <CollectionViewSource x:Key="lineasVentasViewSource" Source="{Binding LineasVentas, Source={StaticResource tPVDataSet}}"/>
+        <CollectionViewSource x:Key="cabecerasVentasViewSource" Source="{Binding CabecerasVentas, Source={StaticResource tPVDataSet}}"/>
+
     </Window.Resources>
     <Window.Background>
         <ImageBrush ImageSource="imagenes/wallpaper.jpg" />
@@ -23,7 +25,7 @@
             <Style TargetType="{x:Type Border}">
                 <Setter Property="Background" Value="#33000000" />
                 <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="15,2,15,2" />
+                <Setter Property="Padding" Value="5" />
                 <Setter Property="BorderBrush" Value="#FFABADB3" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Effect">
@@ -31,11 +33,29 @@
                         <DropShadowEffect Opacity="0.6" ShadowDepth="3" RenderingBias="Quality" />
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="Mouse.MouseDown">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ThicknessAnimation Duration="0:0:0:0.25" Storyboard.TargetProperty="Margin" To="9" AutoReverse="True"/>
+                                    <ThicknessAnimation Duration="0:0:0:0.25" Storyboard.TargetProperty="Padding" To="0" AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Style.Triggers>
             </Style>
             <Style TargetType="{x:Type Label}">
                 <Setter Property="Foreground" Value="White" />
                 <Setter Property="FontFamily" Value="Calibri" />
                 <Setter Property="FontSize" Value="18" />
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="CaretBrush" Value="White"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="16"/>
             </Style>
         </Grid.Resources>
         <Grid.DataContext>
@@ -153,19 +173,26 @@
             </TabControl.Resources>
             <!--Stock-->
             <TabItem x:Name="tabStock" BorderBrush="Transparent" Header="Stock">
-                <Grid>
+                <Grid x:Name="grid">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel HorizontalAlignment="Left" DataContext="{StaticResource productosViewSource}">
+                    <StackPanel x:Name="stackPanel" DataContext="{StaticResource productosViewSource}">
                         <Label Content="Categorías:" FontSize="14" />
-                        <ComboBox x:Name="cbxStock" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                        <ComboBox x:Name="cbxCategoriasStock" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" IsEditable="True" SelectionChanged="cbxCategoriasStock_SelectionChanged">
+                            <ComboBox.Background>
+                                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </ComboBox.Background>
+                        </ComboBox>
                         <Label Content="Productos:" FontSize="14" />
-                        <ListView x:Name="lvStock" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="380" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="523" Width="206" ItemsSource="{Binding}" />
+                        <ListView x:Name="lvStock" Margin="5,0,6,50" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" ItemsSource="{Binding}" MinHeight="750" />
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <Border Grid.Column="1" Margin="5,5,5,0" VerticalAlignment="Top" Height="365">
+                        <Border Grid.Column="1" Margin="5,5,5,0" VerticalAlignment="Top" Height="403">
                             <Grid VerticalAlignment="Top" DataContext="{StaticResource productosViewSource}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -180,16 +207,27 @@
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Label Content="Nombre:" Margin="5" />
-                                <TextBox x:Name="tbxNombreStock" Margin="5" Grid.Column="1" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <TextBox x:Name="tbxNombreStock" Margin="5" Grid.Column="1" FontSize="16" VerticalAlignment="Center" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" MaxLength="50" />
                                 <Label Content="Decripción:" Margin="5" Grid.Row="1" />
-                                <TextBox x:Name="tbxDescripcionStock" Margin="5" Grid.Column="1" Grid.Row="1" Foreground="White" FontSize="16" Background="{x:Null}" Text="{Binding Descripcion, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <TextBox x:Name="tbxDescripcionStock" Margin="5" Grid.Column="1" Grid.Row="1" FontSize="16" Text="{Binding Descripcion, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
                                 <Label Content="Cantidad:" Margin="5" Grid.Row="2" />
-                                <TextBox x:Name="tbxCantidadStock" Margin="5" Grid.Column="1" Grid.Row="2" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Cantidad, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <TextBox x:Name="tbxCantidadStock" Margin="5" Grid.Column="1" Grid.Row="2" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Cantidad, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
                                 <Label Content="Precio:" Margin="5" Grid.Row="3" />
-                                <TextBox x:Name="tbxPrecioStock" Margin="5" Grid.Column="1" Grid.Row="3" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Precio, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <TextBox x:Name="tbxPrecioStock" Margin="5" Grid.Column="1" Grid.Row="3" Foreground="White" FontSize="16" VerticalAlignment="Center" Text="{Binding Precio, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
                                 <Label Content="Categoría:" Margin="5" Grid.Row="4" />
-                                <ComboBox x:Name="cbxCategoriaStock" TextBoxBase.TextChanged="cbxCategoriaStock_TextChanged" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Background="{x:Null}" Foreground="Black" FontSize="16" Text="{Binding nombre, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource categoriasViewSource}, ValidatesOnExceptions=true}" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" IsEditable="True" />
-                                <Button x:Name="btnAñadirCategoriaStock" Content="Añadir categoria" HorizontalAlignment="Right" Click="btnAñadirCategoriaStock_Click" Grid.Column="1" Grid.Row="5" Margin="5" IsEnabled="False" />
+                                <DockPanel  Grid.Column="1" Grid.Row="4">
+                                    <ComboBox x:Name="cbxAñadirCategoriaStock" Margin="4,10,6,10" FontSize="16" DisplayMemberPath="Categoria" IsEditable="True" IsHitTestVisible="False" Text="{Binding Categoria}" />
+                                </DockPanel>
+                                <Grid x:Name="grid1" Grid.Column="1" HorizontalAlignment="Left" Margin="114,21,0,-9" Grid.Row="5" VerticalAlignment="Top">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                </Grid>
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
@@ -236,15 +274,15 @@
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Label Content="Nombre:" Margin="5" />
-                                <TextBox x:Name="tbxNombreProveedores" Margin="5" Grid.Column="1" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxNombreProveedores" Margin="5" Grid.Column="1" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                                 <Label Content="Apellidos:" Margin="5" Grid.Row="1" />
-                                <TextBox x:Name="tbxApellidosProveedores" Margin="5" Grid.Column="1" Grid.Row="1" Foreground="White" FontSize="16" Background="{x:Null}"  IsReadOnly="True" Text="{Binding Apellidos, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
+                                <TextBox x:Name="tbxApellidosProveedores" Margin="5" Grid.Column="1" Grid.Row="1" FontSize="16" IsReadOnly="True" Text="{Binding Apellidos, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
                                 <Label Content="Dirección:" Margin="5" Grid.Row="2" />
-                                <TextBox x:Name="tbxDireccionProveedores" Margin="5" Grid.Column="1" Grid.Row="2" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxDireccionProveedores" Margin="5" Grid.Column="1" Grid.Row="2"  FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                                 <Label Content="Telefono:" Margin="5" Grid.Row="3" />
-                                <TextBox x:Name="tbxTelefonoProveedores" Margin="5" Grid.Column="1" Grid.Row="3" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxTelefonoProveedores" Margin="5" Grid.Column="1" Grid.Row="3"  FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                                 <Label Content="DNI:" Margin="5" Grid.Row="4" />
-                                <TextBox x:Name="tbxDNIProveedores" TextBoxBase.TextChanged="cbxCategoriaStock_TextChanged" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Background="{x:Null}" Foreground="Black" FontSize="16" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxDNIProveedores" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" FontSize="16" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
@@ -291,15 +329,15 @@
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Label Content="Nombre:" Margin="5" />
-                                <TextBox x:Name="tbxNombreClientes" Margin="5" Grid.Column="1" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxNombreClientes" Margin="5" Grid.Column="1" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
                                 <Label Content="Apellidos:" Margin="5" Grid.Row="1" />
-                                <TextBox x:Name="tbxApellidosClientes" Margin="5" Grid.Column="1" Grid.Row="1" Foreground="White" FontSize="16" Background="{x:Null}"  IsReadOnly="True" Text="{Binding Apellidos, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
+                                <TextBox x:Name="tbxApellidosClientes" Margin="5" Grid.Column="1" Grid.Row="1" FontSize="16" IsReadOnly="True" Text="{Binding Apellidos, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" VerticalAlignment="Center" />
                                 <Label Content="Dirección:" Margin="5" Grid.Row="2" />
-                                <TextBox x:Name="tbxDireccionClientes" Margin="5" Grid.Column="1" Grid.Row="2" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxDireccionClientes" Margin="5" Grid.Column="1" Grid.Row="2" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
                                 <Label Content="Telefono:" Margin="5" Grid.Row="3" />
-                                <TextBox x:Name="tbxTelefonoClientes" Margin="5" Grid.Column="1" Grid.Row="3" Background="{x:Null}" Foreground="White" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxTelefonoClientes" Margin="5" Grid.Column="1" Grid.Row="3" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
                                 <Label Content="DNI:" Margin="5" Grid.Row="4" />
-                                <TextBox x:Name="tbxDNIClientes" TextBoxBase.TextChanged="cbxCategoriaStock_TextChanged" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Background="{x:Null}" Foreground="Black" FontSize="16" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <TextBox x:Name="tbxDNIClientes" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
@@ -327,7 +365,12 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <StackPanel HorizontalAlignment="Left" DataContext="{StaticResource productosViewSource}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel HorizontalAlignment="Left" Grid.RowSpan="3" DataContext="{StaticResource productosViewSource}">
                         <Label Content="Buscar:" FontSize="14" />
                         <DockPanel>
                             <TextBox x:Name="tbxBuscadorVender" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorVender_TextChanged" MinHeight="25" />
@@ -343,39 +386,50 @@
                             </Border>
                         </DockPanel>
                     </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <Border x:Name="border">
-                            <Grid x:Name="resumenVenta" >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="30"/>
-                                </Grid.RowDefinitions>
-                                <Label Content="Producto" HorizontalAlignment="Left" />
-                                <GridSplitter Grid.Column="1" Width="1" HorizontalAlignment="Center"/>
-                                <Label Content="Precio" Grid.Column="2" HorizontalAlignment="Center" />
-                                <GridSplitter Grid.Column="3" Width="1" HorizontalAlignment="Center"/>
-                                <Label Content="Cantidad" Grid.Column="4" HorizontalAlignment="Center" />
-                                <GridSplitter Grid.Column="5" Width="1" HorizontalAlignment="Center"/>
-                                <Label Content="Total" Grid.Column="6" HorizontalAlignment="Center" />
-                                <GridSplitter Grid.Column="7" Width="1" HorizontalAlignment="Center"/>
-                                <Label Content="Descuento" Grid.Column="8" HorizontalAlignment="Center" />
-                            </Grid>
-                        </Border>
+                    <Border VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Center" Margin="5">
                         <DockPanel>
-                            <Image x:Name="btnEliminarProductoVenta" Source="imagenes/delete.png" Stretch="None" HorizontalAlignment="Left" Margin="5,5,0,0" />
+                            <Label Content="Cliente: " VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="cbxClienteVentas" Height="20" DockPanel.Dock="Left" Width="250" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource clientesCompradoresViewSource}}" SelectedValuePath="id">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} {1}">
+                                                    <Binding Path="Nombre"/>
+                                                    <Binding Path="Apellidos"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DockPanel>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Margin="5" Orientation="Vertical">
+                        <DataGrid x:Name="resumenVenta" Margin="5" ItemsSource="{Binding}" ColumnWidth="*">
+                            <DataGrid.Columns>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                        <DockPanel>
                             <Image x:Name="btnAñadirDescuento" Source="imagenes/discount.png" Stretch="None" HorizontalAlignment="Right" Margin="0,5,5,0" />
                         </DockPanel>
                     </StackPanel>
+                    <DockPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom">
+                        <Border Padding="0" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                            <Image Source="imagenes/register.png" Stretch="None" Margin="5" DockPanel.Dock="Right"/>
+                        </Border>
+                        <Border x:Name="btnTerminarVenta" VerticalAlignment="Center" DockPanel.Dock="Right" HorizontalAlignment="Right" IsEnabled="False">
+                            <Label Content="Terminar venta" VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center" MouseLeftButtonUp="btnTerminarVenta_MouseLeftButtonUp"/>
+                        </Border>
+                        <Border  VerticalAlignment="Center" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                            <DockPanel>
+                                <Label Content="Total: " VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                <TextBox x:Name="tbxTotalVenta" VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center" MinWidth="50"/>
+                            </DockPanel>
+                        </Border>
+                    </DockPanel>
                 </Grid>
             </TabItem>
         </TabControl>
