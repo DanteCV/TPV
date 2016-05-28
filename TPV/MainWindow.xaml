@@ -347,20 +347,28 @@
                         <Border x:Name="border">
                             <Grid x:Name="resumenVenta" >
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition  />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition />
+                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition />
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="30"/>
                                 </Grid.RowDefinitions>
-                                <Label Content="Producto" />
-                                <Label Content="Precio" Grid.Column="1" />
-                                <Label Content="Cantidad" Grid.Column="2" />
-                                <Label Content="Total" Grid.Column="3" />
-                                <Label Content="Descuento" Grid.Column="4" />
+                                <Label Content="Producto" HorizontalAlignment="Left" />
+                                <GridSplitter Grid.Column="1" Width="1" HorizontalAlignment="Center"/>
+                                <Label Content="Precio" Grid.Column="2" HorizontalAlignment="Center" />
+                                <GridSplitter Grid.Column="3" Width="1" HorizontalAlignment="Center"/>
+                                <Label Content="Cantidad" Grid.Column="4" HorizontalAlignment="Center" />
+                                <GridSplitter Grid.Column="5" Width="1" HorizontalAlignment="Center"/>
+                                <Label Content="Total" Grid.Column="6" HorizontalAlignment="Center" />
+                                <GridSplitter Grid.Column="7" Width="1" HorizontalAlignment="Center"/>
+                                <Label Content="Descuento" Grid.Column="8" HorizontalAlignment="Center" />
                             </Grid>
                         </Border>
                         <DockPanel>

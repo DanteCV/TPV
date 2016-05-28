@@ -159,7 +159,7 @@ namespace TPV
             {
                 DataRow row = tPVDataSet.Tables["Productos"].Rows.Find(selecteditem["id"]);
 
-                tPVDataSet.Tables["Productos"].Rows.Remove(row);
+                row.Delete();
 
                 tPVDataSetProductosTableAdapter.Update(tPVDataSet);
 
@@ -348,7 +348,7 @@ namespace TPV
             {
                 DataRow row = tPVDataSet.Tables["ClientesVendedores"].Rows.Find(selecteditem["id"]);
 
-                tPVDataSet.Tables["ClientesVendedores"].Rows.Remove(row);
+                row.Delete();
 
                 tPVDataSetClientesVendedoresTableAdapter.Update(tPVDataSet);
 
@@ -528,7 +528,7 @@ namespace TPV
             {
                 DataRow row = tPVDataSet.Tables["ClientesCompradores"].Rows.Find(selecteditem["id"]);
 
-                tPVDataSet.Tables["ClientesCompradores"].Rows.Remove(row);
+                row.Delete();
 
                 tPVDataSetClientesCompradoresTableAdapter.Update(tPVDataSet);
 
@@ -637,37 +637,28 @@ namespace TPV
 
                 resumenVenta.RowDefinitions.Add(r);
 
-                Label nombre = new Label();
-                nombre.Content = row[1];
+                //Nombre del producto
+                AddLabelToGridResumenVentas(row[1].ToString(), numProductosResumen, 0);
 
-                nombre.SetValue(Grid.RowProperty, numProductosResumen);
-                nombre.SetValue(Grid.ColumnProperty, 0);
+                AddSplitterToGridResumenVentas(numProductosResumen, 1);
 
-                resumenVenta.Children.Add(nombre);
+                //Precio
+                AddLabelToGridResumenVentas(row[4].ToString(), numProductosResumen, 2);
+                decimal precio = Convert.ToDecimal(row[4]);
 
-                Label precio = new Label();
-                precio.Content = row[4];
+                AddSplitterToGridResumenVentas(numProductosResumen, 3);
 
-                precio.SetValue(Grid.RowProperty, numProductosResumen);
-                precio.SetValue(Grid.ColumnProperty, 1);
+                //Cantidad
+                AddLabelToGridResumenVentas(tbxCantidadStock.Text, numProductosResumen, 4);
+                int cantidad = Convert.ToInt32(tbxCantidadStock.Text);
 
-                resumenVenta.Children.Add(precio);
+                AddSplitterToGridResumenVentas(numProductosResumen, 5);
 
-                Label cantidad = new Label();
-                cantidad.Content = tbxCantidadVender.Text;
+                //Total
+                string total =(precio * cantidad).ToString();
+                AddLabelToGridResumenVentas(total, numProductosResumen, 6);
 
-                cantidad.SetValue(Grid.RowProperty, numProductosResumen);
-                cantidad.SetValue(Grid.ColumnProperty, 2);
-
-                resumenVenta.Children.Add(cantidad);
-
-                Label total = new Label();
-                total.Content = Convert.ToDecimal(precio.Content) * Convert.ToInt32(cantidad.Content);
-
-                total.SetValue(Grid.RowProperty, numProductosResumen);
-                total.SetValue(Grid.ColumnProperty, 3);
-
-                resumenVenta.Children.Add(total);
+                AddSplitterToGridResumenVentas(numProductosResumen, 7);
 
                 tbxCantidadVender.Clear();
 
@@ -678,5 +669,32 @@ namespace TPV
             }
         }     
         #endregion
+
+        public void AddLabelToGridResumenVentas(String content, int row, int column)
+        {
+            Label label = new Label();
+            label.Content = content;
+
+            label.SetValue(Grid.RowProperty, row);
+            label.SetValue(Grid.ColumnProperty, column);
+
+            resumenVenta.Children.Add(label);
+        }
+
+        public void AddSplitterToGridResumenVentas(int row, int column)
+        {
+            GridSplitter splitter = new GridSplitter();
+
+            splitter.SetValue(Grid.RowProperty, row);
+            splitter.SetValue(Grid.ColumnProperty, column);
+
+            splitter.Width = 1;
+
+            splitter.HorizontalAlignment = HorizontalAlignment.Center;
+
+            resumenVenta.Children.Add(splitter);
+        }
+
+
     }
 }
