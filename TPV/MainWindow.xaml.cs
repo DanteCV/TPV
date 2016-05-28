@@ -46,7 +46,7 @@ namespace TPV
         private TPV.TPVDataSetTableAdapters.LineasVentasTableAdapter tPVDataSetLineasVentasTableAdapter;
         private TPV.TPVDataSetTableAdapters.CabecerasVentasTableAdapter tPVDataSetCabecerasVentasTableAdapter;
         private TPV.TPVDataSetTableAdapters.LineasComprasTableAdapter tPVDataSetLineasComprasTableAdapter;
-        private TPV.TPVDataSetTableAdapters.CabecerasComprasTableAdapter tPVDataSetCabecerasComprasTableAdapter
+        private TPV.TPVDataSetTableAdapters.CabecerasComprasTableAdapter tPVDataSetCabecerasComprasTableAdapter;
 
         private TPV.TPVDataSet tPVDataSet;
 
@@ -868,7 +868,7 @@ namespace TPV
 
         private void tbxBuscadorComprar_TextChanged(object sender, TextChangedEventArgs e)
         {
-            tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "nombre like \'%" + tbxBuscadorVender.Text + "%\'";
+            tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "nombre like \'%" + tbxBuscadorComprar.Text + "%\'";
         }
 
         private void tbxNuevoProductoCompra_TextChanged(object sender, TextChangedEventArgs e)
@@ -982,12 +982,18 @@ namespace TPV
 
         private void resumenCompraRow_Added(object sender, DataTableNewRowEventArgs e)
         {
-            
+            btnTerminarCompra.IsEnabled = true;
         }
 
         private void resumenCompraRow_Deleted(object sender, DataRowChangeEventArgs e)
         {
-           
+            numProductosResumenCompra--;
+
+            if (numProductosResumenCompra == 0)
+            {
+                tPVDataSet.Tables["CabecerasCompra"].Rows.Find(idCabeceraCompra).Delete();
+                btnTerminarCompra.IsEnabled = false;
+            }
         }
 
         #endregion

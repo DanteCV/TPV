@@ -383,8 +383,11 @@
                         <ComboBox x:Name="cbxVender" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                         <Label Content="Productos:" FontSize="14" />
                         <ListView x:Name="lvVender" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="420" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="0" Width="0" ItemsSource="{Binding}" MinWidth="220" />
-                        <DockPanel>
+                        <DockPanel Margin="0,10,0,0">
+                            <Label Content="Cantidad:"/>
                             <TextBox x:Name="tbxCantidadVender" MinWidth="60" Margin="5" Background="#59000000" TextAlignment="Center" FontSize="16" Foreground="White" MaxLines="1" TextWrapping="Wrap"/>
+                        </DockPanel>
+                        <DockPanel>                            
                             <Border x:Name="btnAñadirProductoVenta" MouseLeftButtonUp="btnAñadirProductoVenta_MouseLeftButtonUp">
                                 <Image Source="imagenes/add.png" Margin="0,5,0,5" Stretch="None" />
                             </Border>
