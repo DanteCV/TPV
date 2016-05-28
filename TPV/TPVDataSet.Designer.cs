@@ -42,13 +42,13 @@ namespace TPV {
         
         private global::System.Data.DataRelation relationFK_ClientesCompradores_CabecerasVentas;
         
-        private global::System.Data.DataRelation relationFK_Productos_LineasCompras;
-        
         private global::System.Data.DataRelation relationFK_CabecerasCompras_LineasCompras;
         
-        private global::System.Data.DataRelation relationFK_CabecerasVentas_LineasVentas;
+        private global::System.Data.DataRelation relationFK_Productos_LineasCompras;
         
         private global::System.Data.DataRelation relationFK_Productos_LineasVentas;
+        
+        private global::System.Data.DataRelation relationFK_CabecerasVentas_LineasVentas;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -352,10 +352,10 @@ namespace TPV {
             }
             this.relationFK_ClientesVendedores_CabecerasCompras = this.Relations["FK_ClientesVendedores_CabecerasCompras"];
             this.relationFK_ClientesCompradores_CabecerasVentas = this.Relations["FK_ClientesCompradores_CabecerasVentas"];
-            this.relationFK_Productos_LineasCompras = this.Relations["FK_Productos_LineasCompras"];
             this.relationFK_CabecerasCompras_LineasCompras = this.Relations["FK_CabecerasCompras_LineasCompras"];
-            this.relationFK_CabecerasVentas_LineasVentas = this.Relations["FK_CabecerasVentas_LineasVentas"];
+            this.relationFK_Productos_LineasCompras = this.Relations["FK_Productos_LineasCompras"];
             this.relationFK_Productos_LineasVentas = this.Relations["FK_Productos_LineasVentas"];
+            this.relationFK_CabecerasVentas_LineasVentas = this.Relations["FK_CabecerasVentas_LineasVentas"];
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -395,13 +395,6 @@ namespace TPV {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.SetNull;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
-            fkc = new global::System.Data.ForeignKeyConstraint("FK_Productos_LineasCompras", new global::System.Data.DataColumn[] {
-                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasCompras.idProductoColumn});
-            this.tableLineasCompras.Constraints.Add(fkc);
-            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
-            fkc.DeleteRule = global::System.Data.Rule.SetNull;
-            fkc.UpdateRule = global::System.Data.Rule.Cascade;
             fkc = new global::System.Data.ForeignKeyConstraint("FK_CabecerasCompras_LineasCompras", new global::System.Data.DataColumn[] {
                         this.tableCabecerasCompras.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableLineasCompras.idCabeceraColumn});
@@ -409,12 +402,12 @@ namespace TPV {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
-            fkc = new global::System.Data.ForeignKeyConstraint("FK_CabecerasVentas_LineasVentas", new global::System.Data.DataColumn[] {
-                        this.tableCabecerasVentas.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasVentas.idCabeceraColumn});
-            this.tableLineasVentas.Constraints.Add(fkc);
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_Productos_LineasCompras", new global::System.Data.DataColumn[] {
+                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasCompras.idProductoColumn});
+            this.tableLineasCompras.Constraints.Add(fkc);
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
-            fkc.DeleteRule = global::System.Data.Rule.Cascade;
+            fkc.DeleteRule = global::System.Data.Rule.SetNull;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
             fkc = new global::System.Data.ForeignKeyConstraint("FK_Productos_LineasVentas", new global::System.Data.DataColumn[] {
                         this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
@@ -422,6 +415,13 @@ namespace TPV {
             this.tableLineasVentas.Constraints.Add(fkc);
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.SetNull;
+            fkc.UpdateRule = global::System.Data.Rule.Cascade;
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_CabecerasVentas_LineasVentas", new global::System.Data.DataColumn[] {
+                        this.tableCabecerasVentas.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasVentas.idCabeceraColumn});
+            this.tableLineasVentas.Constraints.Add(fkc);
+            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
+            fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
             this.relationFK_ClientesVendedores_CabecerasCompras = new global::System.Data.DataRelation("FK_ClientesVendedores_CabecerasCompras", new global::System.Data.DataColumn[] {
                         this.tableClientesVendedores.idColumn}, new global::System.Data.DataColumn[] {
@@ -431,22 +431,22 @@ namespace TPV {
                         this.tableClientesCompradores.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableCabecerasVentas.idClienteColumn}, false);
             this.Relations.Add(this.relationFK_ClientesCompradores_CabecerasVentas);
-            this.relationFK_Productos_LineasCompras = new global::System.Data.DataRelation("FK_Productos_LineasCompras", new global::System.Data.DataColumn[] {
-                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasCompras.idProductoColumn}, false);
-            this.Relations.Add(this.relationFK_Productos_LineasCompras);
             this.relationFK_CabecerasCompras_LineasCompras = new global::System.Data.DataRelation("FK_CabecerasCompras_LineasCompras", new global::System.Data.DataColumn[] {
                         this.tableCabecerasCompras.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableLineasCompras.idCabeceraColumn}, false);
             this.Relations.Add(this.relationFK_CabecerasCompras_LineasCompras);
-            this.relationFK_CabecerasVentas_LineasVentas = new global::System.Data.DataRelation("FK_CabecerasVentas_LineasVentas", new global::System.Data.DataColumn[] {
-                        this.tableCabecerasVentas.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasVentas.idCabeceraColumn}, false);
-            this.Relations.Add(this.relationFK_CabecerasVentas_LineasVentas);
+            this.relationFK_Productos_LineasCompras = new global::System.Data.DataRelation("FK_Productos_LineasCompras", new global::System.Data.DataColumn[] {
+                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasCompras.idProductoColumn}, false);
+            this.Relations.Add(this.relationFK_Productos_LineasCompras);
             this.relationFK_Productos_LineasVentas = new global::System.Data.DataRelation("FK_Productos_LineasVentas", new global::System.Data.DataColumn[] {
                         this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableLineasVentas.idProductoColumn}, false);
             this.Relations.Add(this.relationFK_Productos_LineasVentas);
+            this.relationFK_CabecerasVentas_LineasVentas = new global::System.Data.DataRelation("FK_CabecerasVentas_LineasVentas", new global::System.Data.DataColumn[] {
+                        this.tableCabecerasVentas.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasVentas.idCabeceraColumn}, false);
+            this.Relations.Add(this.relationFK_CabecerasVentas_LineasVentas);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -731,7 +731,6 @@ namespace TPV {
                 this.columnid.AutoIncrement = true;
                 this.columnid.AllowDBNull = false;
                 this.columnid.Unique = true;
-                this.columnidCliente.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1022,7 +1021,6 @@ namespace TPV {
                 this.columnid.AutoIncrement = true;
                 this.columnid.AllowDBNull = false;
                 this.columnid.Unique = true;
-                this.columnidCliente.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2857,7 +2855,12 @@ namespace TPV {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public long idCliente {
                 get {
-                    return ((long)(this[this.tableCabecerasCompras.idClienteColumn]));
+                    try {
+                        return ((long)(this[this.tableCabecerasCompras.idClienteColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'idCliente\' in table \'CabecerasCompras\' is DBNull.", e);
+                    }
                 }
                 set {
                     this[this.tableCabecerasCompras.idClienteColumn] = value;
@@ -2889,6 +2892,18 @@ namespace TPV {
                 set {
                     this.SetParentRow(value, this.Table.ParentRelations["FK_ClientesVendedores_CabecerasCompras"]);
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsidClienteNull() {
+                return this.IsNull(this.tableCabecerasCompras.idClienteColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetidClienteNull() {
+                this[this.tableCabecerasCompras.idClienteColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2944,7 +2959,12 @@ namespace TPV {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public long idCliente {
                 get {
-                    return ((long)(this[this.tableCabecerasVentas.idClienteColumn]));
+                    try {
+                        return ((long)(this[this.tableCabecerasVentas.idClienteColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'idCliente\' in table \'CabecerasVentas\' is DBNull.", e);
+                    }
                 }
                 set {
                     this[this.tableCabecerasVentas.idClienteColumn] = value;
@@ -2976,6 +2996,18 @@ namespace TPV {
                 set {
                     this.SetParentRow(value, this.Table.ParentRelations["FK_ClientesCompradores_CabecerasVentas"]);
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsidClienteNull() {
+                return this.IsNull(this.tableCabecerasVentas.idClienteColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetidClienteNull() {
+                this[this.tableCabecerasVentas.idClienteColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3425,23 +3457,23 @@ namespace TPV {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ProductosRow ProductosRow {
-                get {
-                    return ((ProductosRow)(this.GetParentRow(this.Table.ParentRelations["FK_Productos_LineasCompras"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["FK_Productos_LineasCompras"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CabecerasComprasRow CabecerasComprasRow {
                 get {
                     return ((CabecerasComprasRow)(this.GetParentRow(this.Table.ParentRelations["FK_CabecerasCompras_LineasCompras"])));
                 }
                 set {
                     this.SetParentRow(value, this.Table.ParentRelations["FK_CabecerasCompras_LineasCompras"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ProductosRow ProductosRow {
+                get {
+                    return ((ProductosRow)(this.GetParentRow(this.Table.ParentRelations["FK_Productos_LineasCompras"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["FK_Productos_LineasCompras"]);
                 }
             }
             
@@ -3551,23 +3583,23 @@ namespace TPV {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CabecerasVentasRow CabecerasVentasRow {
-                get {
-                    return ((CabecerasVentasRow)(this.GetParentRow(this.Table.ParentRelations["FK_CabecerasVentas_LineasVentas"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["FK_CabecerasVentas_LineasVentas"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public ProductosRow ProductosRow {
                 get {
                     return ((ProductosRow)(this.GetParentRow(this.Table.ParentRelations["FK_Productos_LineasVentas"])));
                 }
                 set {
                     this.SetParentRow(value, this.Table.ParentRelations["FK_Productos_LineasVentas"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public CabecerasVentasRow CabecerasVentasRow {
+                get {
+                    return ((CabecerasVentasRow)(this.GetParentRow(this.Table.ParentRelations["FK_CabecerasVentas_LineasVentas"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["FK_CabecerasVentas_LineasVentas"]);
                 }
             }
             
@@ -4336,9 +4368,14 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(long Original_id, long Original_idCliente, global::System.Nullable<global::System.DateTime> Original_fecha) {
+        public virtual int Delete(long Original_id, global::System.Nullable<long> Original_idCliente, global::System.Nullable<global::System.DateTime> Original_fecha) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((long)(Original_id));
-            this.Adapter.DeleteCommand.Parameters[1].Value = ((long)(Original_idCliente));
+            if ((Original_idCliente.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((long)(Original_idCliente.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
             if ((Original_fecha.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[2].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[3].Value = ((System.DateTime)(Original_fecha.Value));
@@ -4367,9 +4404,14 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(long id, long idCliente, global::System.Nullable<global::System.DateTime> fecha) {
+        public virtual int Insert(long id, global::System.Nullable<long> idCliente, global::System.Nullable<global::System.DateTime> fecha) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((long)(id));
-            this.Adapter.InsertCommand.Parameters[1].Value = ((long)(idCliente));
+            if ((idCliente.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[1].Value = ((long)(idCliente.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
             if ((fecha.HasValue == true)) {
                 this.Adapter.InsertCommand.Parameters[2].Value = ((System.DateTime)(fecha.Value));
             }
@@ -4396,9 +4438,14 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(long id, long idCliente, global::System.Nullable<global::System.DateTime> fecha, long Original_id, long Original_idCliente, global::System.Nullable<global::System.DateTime> Original_fecha) {
+        public virtual int Update(long id, global::System.Nullable<long> idCliente, global::System.Nullable<global::System.DateTime> fecha, long Original_id, global::System.Nullable<long> Original_idCliente, global::System.Nullable<global::System.DateTime> Original_fecha) {
             this.Adapter.UpdateCommand.Parameters[0].Value = ((long)(id));
-            this.Adapter.UpdateCommand.Parameters[1].Value = ((long)(idCliente));
+            if ((idCliente.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[1].Value = ((long)(idCliente.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
             if ((fecha.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[2].Value = ((System.DateTime)(fecha.Value));
             }
@@ -4406,7 +4453,12 @@ namespace TPV.TPVDataSetTableAdapters {
                 this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
             this.Adapter.UpdateCommand.Parameters[3].Value = ((long)(Original_id));
-            this.Adapter.UpdateCommand.Parameters[4].Value = ((long)(Original_idCliente));
+            if ((Original_idCliente.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((long)(Original_idCliente.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
             if ((Original_fecha.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[5].Value = ((object)(0));
                 this.Adapter.UpdateCommand.Parameters[6].Value = ((System.DateTime)(Original_fecha.Value));
@@ -4435,7 +4487,7 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(long idCliente, global::System.Nullable<global::System.DateTime> fecha, long Original_id, long Original_idCliente, global::System.Nullable<global::System.DateTime> Original_fecha) {
+        public virtual int Update(global::System.Nullable<long> idCliente, global::System.Nullable<global::System.DateTime> fecha, long Original_id, global::System.Nullable<long> Original_idCliente, global::System.Nullable<global::System.DateTime> Original_fecha) {
             return this.Update(Original_id, idCliente, fecha, Original_id, Original_idCliente, Original_fecha);
         }
     }

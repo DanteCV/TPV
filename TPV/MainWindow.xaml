@@ -15,6 +15,8 @@
         <CollectionViewSource x:Key="clientesVendedoresViewSource" Source="{Binding ClientesVendedores, Source={StaticResource tPVDataSet}}" />
         <CollectionViewSource x:Key="lineasVentasViewSource" Source="{Binding LineasVentas, Source={StaticResource tPVDataSet}}"/>
         <CollectionViewSource x:Key="cabecerasVentasViewSource" Source="{Binding CabecerasVentas, Source={StaticResource tPVDataSet}}"/>
+        <CollectionViewSource x:Key="cabecerasComprasViewSource" Source="{Binding CabecerasCompras, Source={StaticResource tPVDataSet}}"/>
+        <CollectionViewSource x:Key="lineasComprasViewSource" Source="{Binding LineasCompras, Source={StaticResource tPVDataSet}}"/>
 
     </Window.Resources>
     <Window.Background>
@@ -88,7 +90,7 @@
         </Border>
 
         <!--Botones Comprar y Vender-->
-        <Grid Grid.Row="2" Margin="0,0,0,30">
+        <Grid Grid.Row="2" Margin="0,0,0,30" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition />
@@ -101,10 +103,10 @@
                 <Image Source="imagenes/register.png" Margin="0,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60" />
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <Border>
+                <Border MouseLeftButtonUp="btnComprar_MouseLeftButtonUp">
                     <Label Name="btnComprar" Content="Comprar" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
                 </Border>
-                <Border x:Name="btnVender" MouseLeftButtonUp="btnVender_MouseLeftButtonUp">
+                <Border MouseLeftButtonUp="btnVender_MouseLeftButtonUp">
                     <Label Content="Vender" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
                 </Border>
             </StackPanel>
@@ -180,7 +182,7 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel x:Name="stackPanel" DataContext="{StaticResource productosViewSource}">
                         <Label Content="Categorías:" FontSize="14" />
-                        <ComboBox x:Name="cbxCategoriasStock" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" IsEditable="True" SelectionChanged="cbxCategoriasStock_SelectionChanged">
+                        <ComboBox x:Name="cbxCategoriasStock" HorizontalAlignment="Left" IsEditable="True" Margin="5,0,5,0" MinWidth="180" SelectionChanged="cbxCategoriasStock_SelectionChanged">
                             <ComboBox.Background>
                                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                     <GradientStop Color="#FFF0F0F0" Offset="0"/>
@@ -256,8 +258,10 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <StackPanel HorizontalAlignment="Left">
+                        <Label Content="Buscar:" FontSize="14" />
+                        <TextBox x:Name="tbxBuscadorProveedores" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorProveedores_TextChanged" MinHeight="25" />
                         <Label Content="Proveedores:" FontSize="14" />
-                        <ListView x:Name="lvProveedores" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="380" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="523" Width="206" ItemsSource="{Binding}" />
+                        <ListView x:Name="lvProveedores" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="380" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="523" Width="206" ItemsSource="{Binding Source={StaticResource clientesVendedoresViewSource}}" />
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <Border Grid.Column="1" Margin="5,27,5,0" VerticalAlignment="Top" BorderThickness="1">
@@ -311,6 +315,8 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <StackPanel HorizontalAlignment="Left">
+                        <Label Content="Buscar:" FontSize="14" />
+                        <TextBox x:Name="tbxBuscadorClientes" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorClientes_TextChanged" MinHeight="25" />
                         <Label Content="Clientes:" FontSize="14" />
                         <ListView x:Name="lvClientes" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="380" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="523" Width="206" ItemsSource="{Binding Source={StaticResource clientesCompradoresViewSource}}" />
                     </StackPanel>
@@ -372,9 +378,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel HorizontalAlignment="Left" Grid.RowSpan="3" DataContext="{StaticResource productosViewSource}">
                         <Label Content="Buscar:" FontSize="14" />
-                        <DockPanel>
-                            <TextBox x:Name="tbxBuscadorVender" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorVender_TextChanged" MinHeight="25" />
-                        </DockPanel>
+                        <TextBox x:Name="tbxBuscadorVender" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorVender_TextChanged" MinHeight="25" />
                         <Label Content="Categorías:" FontSize="14" />
                         <ComboBox x:Name="cbxVender" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                         <Label Content="Productos:" FontSize="14" />
@@ -427,6 +431,82 @@
                             <DockPanel>
                                 <Label Content="Total: " VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                                 <TextBox x:Name="tbxTotalVenta" VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center" MinWidth="50"/>
+                            </DockPanel>
+                        </Border>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <!--Comprar-->
+            <TabItem x:Name="tabComprar">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel HorizontalAlignment="Left" Grid.RowSpan="3" DataContext="{StaticResource productosViewSource}">
+                        <Label Content="Buscar:" FontSize="14" />
+                        <TextBox x:Name="tbxBuscadorComprar" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxBuscadorComprar_TextChanged" MinHeight="25" />
+                        <Label Content="Categorías:" FontSize="14" />
+                        <ComboBox x:Name="cbxComprar" HorizontalAlignment="Left" Margin="5,0,5,0" IsReadOnly="True" MinWidth="180" DisplayMemberPath="nombre" ItemsSource="{Binding Source={StaticResource categoriasViewSource}}" SelectedValuePath="id" SelectedValue="{Binding Categoria, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+                        <Label Content="Productos:" FontSize="14" />
+                        <ListView x:Name="lvComprar" Margin="5,0,5,5" Background="#59000000" VerticalContentAlignment="Bottom" Grid.IsSharedSizeScope="True" MinHeight="420" DisplayMemberPath="Nombre" SelectedValuePath="id" SelectionMode="Single" Foreground="White" Height="0" Width="0" ItemsSource="{Binding}" MinWidth="220" />
+                        <Label Content="Nuevo producto:" FontSize="14" />
+                        <TextBox x:Name="tbxNuevoProductoCompra" Margin="5,0,5,0"  HorizontalContentAlignment="Stretch" TextChanged="tbxNuevoProductoCompra_TextChanged" MinHeight="25" />
+                        <DockPanel Margin="0,10,0,0">
+                            <Label Content="Cantidad:"/>
+                            <TextBox x:Name="tbxCantidadComprar" MinWidth="60" Margin="5" Background="#59000000" TextAlignment="Center" FontSize="16" Foreground="White" MaxLines="1" TextWrapping="Wrap"/>
+                        </DockPanel>
+                        <DockPanel Margin="0,10,0,0">
+                            <Label Content="Precio:"/>
+                            <TextBox x:Name="tbxPrecioComprar" MinWidth="60" Margin="5" Background="#59000000" TextAlignment="Center" FontSize="16" Foreground="White" MaxLines="1" TextWrapping="Wrap"/>
+                        </DockPanel>
+                        <Border x:Name="btnAñadirProductoCompra" MouseLeftButtonUp="btnAñadirProductoCompra_MouseLeftButtonUp">
+                            <Image Source="imagenes/add.png" Margin="0,5,0,5" Stretch="None" />
+                        </Border>
+                    </StackPanel>
+                    <Border VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Center" Margin="5">
+                        <DockPanel>
+                            <Label Content="Cliente: " VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="cbxClienteCompras" Height="20" DockPanel.Dock="Left" Width="250" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource clientesCompradoresViewSource}}" SelectedValuePath="id">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} {1}">
+                                                    <Binding Path="Nombre"/>
+                                                    <Binding Path="Apellidos"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DockPanel>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Margin="5" Orientation="Vertical">
+                        <DataGrid x:Name="resumenCompra" Margin="5" ItemsSource="{Binding}" ColumnWidth="*">
+                            <DataGrid.Columns>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DockPanel/>
+                    </StackPanel>
+                    <DockPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom">
+                        <Border Padding="0" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                            <Image Source="imagenes/register.png" Stretch="None" Margin="5" DockPanel.Dock="Right"/>
+                        </Border>
+                        <Border x:Name="btnTerminarCompra" VerticalAlignment="Center" DockPanel.Dock="Right" HorizontalAlignment="Right" IsEnabled="False" MouseLeftButtonUp="btnTerminarCompra_MouseLeftButtonUp">
+                            <Label Content="Terminar Compra" VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border  VerticalAlignment="Center" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                            <DockPanel>
+                                <Label Content="Total: " VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                <TextBox x:Name="tbxTotalCompra" VerticalContentAlignment="Stretch" DockPanel.Dock="Left" VerticalAlignment="Center" MinWidth="50"/>
                             </DockPanel>
                         </Border>
                     </DockPanel>
