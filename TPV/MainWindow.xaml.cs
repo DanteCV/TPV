@@ -1200,6 +1200,7 @@ namespace TPV
 
             dataTableResumen.Columns["Producto"].ReadOnly = true;
             dataTableResumen.Columns["Total"].ReadOnly = true;
+            dataTableResumen.Columns["Precio"].ReadOnly = true;
 
             dataTableResumen.Columns["Total"].Expression = "(Precio * Cantidad)";
 
