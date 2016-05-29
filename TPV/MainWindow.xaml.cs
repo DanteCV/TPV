@@ -49,6 +49,7 @@ namespace TPV
             numProductosResumenCompra = 0;
 
             tPVDataSet = ((TPV.TPVDataSet)(this.FindResource("tPVDataSet")));
+
             // Load data into the table Productos. You can modify this code as needed.
             tPVDataSetProductosTableAdapter = new TPV.TPVDataSetTableAdapters.ProductosTableAdapter();
             tPVDataSetProductosTableAdapter.Fill(tPVDataSet.Productos);
@@ -1225,6 +1226,13 @@ namespace TPV
         {
             e.Handled = !onlyInteger(e.Text);
         }
-        
+
+        private void btnMenu_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (btnExportarComprasExcel.Visibility == Visibility.Hidden)
+                btnExportarVentasExcel.Visibility = btnExportarComprasExcel.Visibility = Visibility.Visible;
+            else
+                btnExportarVentasExcel.Visibility = btnExportarComprasExcel.Visibility = Visibility.Hidden;
+        }
     }
 }

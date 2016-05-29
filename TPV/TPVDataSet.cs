@@ -4,6 +4,9 @@
 
     public partial class TPVDataSet
     {
+        partial class ClientesVendedoresDataTable
+        {
+        }
     }
 }
 

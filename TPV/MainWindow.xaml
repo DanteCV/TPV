@@ -9,8 +9,6 @@
     <Window.Resources>
         <local:TPVDataSet x:Key="tPVDataSet" />
         <CollectionViewSource x:Key="productosViewSource" Source="{Binding Productos, Source={StaticResource tPVDataSet}}" />
-        <CollectionViewSource x:Key="categoriasViewSource" Source="{Binding Categorias, Source={StaticResource tPVDataSet}}" />
-        <CollectionViewSource x:Key="categoriasProductosViewSource" Source="{Binding FK_Categorias_Productos, Source={StaticResource categoriasViewSource}}" />
         <CollectionViewSource x:Key="clientesCompradoresViewSource" Source="{Binding ClientesCompradores, Source={StaticResource tPVDataSet}}" />
         <CollectionViewSource x:Key="clientesVendedoresViewSource" Source="{Binding ClientesVendedores, Source={StaticResource tPVDataSet}}" />
         <CollectionViewSource x:Key="lineasVentasViewSource" Source="{Binding LineasVentas, Source={StaticResource tPVDataSet}}"/>
@@ -34,7 +32,7 @@
                     <Setter.Value>
                         <DropShadowEffect Opacity="0.6" ShadowDepth="3" RenderingBias="Quality" />
                     </Setter.Value>
-                </Setter>                
+                </Setter>
             </Style>
             <Style TargetType="{x:Type Label}">
                 <Setter Property="Foreground" Value="White" />
@@ -43,7 +41,7 @@
             </Style>
             <Style TargetType="{x:Type TextBox}">
                 <Setter Property="CaretBrush" Value="White"/>
-                <Setter Property="Background" Value="#59000000"/>               
+                <Setter Property="Background" Value="#59000000"/>
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="FontSize" Value="16"/>
             </Style>
@@ -85,7 +83,7 @@
 
         <!--Boton Menu-->
         <DockPanel Grid.ColumnSpan="5">
-            <Border VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left" Style="{StaticResource BordeConAnimaciones}">
+            <Border x:Name="btnMenu" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left" Style="{StaticResource BordeConAnimaciones}" MouseLeftButtonDown="btnMenu_MouseLeftButtonDown">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Image Source="/imagenes/signs.png" Width="20" Height="20" Margin="5" VerticalAlignment="Center" />
                     <Label Name="labMenu" Content="Menu" FontSize="14" VerticalAlignment="Center" />
@@ -93,10 +91,10 @@
             </Border>
 
             <!--Opciones del menu-->
-            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnExportarComprasExcel" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left" MouseLeftButtonUp="btnExportarComprasExcel_MouseLeftButtonUp">
+            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnExportarComprasExcel" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left" MouseLeftButtonUp="btnExportarComprasExcel_MouseLeftButtonUp" Visibility="Hidden">
                 <Label Content="Exportar compras a excel" FontSize="14" VerticalAlignment="Center" />
             </Border>
-            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnExportarVentasExcel" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left" MouseLeftButtonUp="btnExportarVentasExcel_MouseLeftButtonUp">
+            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnExportarVentasExcel" VerticalAlignment="Center" Margin="5" HorizontalAlignment="Left" MouseLeftButtonUp="btnExportarVentasExcel_MouseLeftButtonUp" Visibility="Hidden">
                 <Label Content="Exportar ventas a excel" FontSize="14" VerticalAlignment="Center" TextOptions.TextFormattingMode="Display" />
             </Border>
         </DockPanel>
@@ -165,7 +163,7 @@
             </Border>
         </Grid>
 
-       
+
         <TabControl x:Name="tabControl" Grid.Row="1" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="4" Margin="20,10,10,10"
                     Background="#3F000000"  BorderBrush="#FFABADB3" BorderThickness="1">
             <TabControl.Resources>
@@ -238,19 +236,37 @@
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnAñadirStock"  HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirStock_Click" Source="imagenes/add.png" Stretch="Fill" />
-                            <Image x:Name="btnAñadirConfirmarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirConfirmarStock_Click" Source="imagenes/confirm.png" Visibility="Hidden" />
-                            <Image x:Name="btnAñadirCancelarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCancelarStock_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border x:Name="btnAñadirStock" MouseLeftButtonUp="btnAñadirStock_Click" Style="{StaticResource BordeConAnimaciones}">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/add.png" Stretch="Fill" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}"  x:Name="btnAñadirConfirmarStock" Visibility="Hidden" MouseLeftButtonUp="btnAñadirConfirmarStock_Click">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnAñadirCancelarStock" MouseLeftButtonUp="btnAñadirCancelarStock_Click" Visibility="Hidden">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnEliminarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarStock_Click" Source="imagenes/delete.png" />
-                            <Image x:Name="btnEliminarConfirmarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarConfirmarStock_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
-                            <Image x:Name="btnEliminarCancelarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCancelarStock_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarStock" MouseLeftButtonUp="btnEliminarStock_Click">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/delete.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarConfirmarStock" MouseLeftButtonUp="btnEliminarConfirmarStock_Click" Visibility="Hidden">
+                                <Image HorizontalAlignment="Left" Margin="10"  Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarCancelarStock" MouseLeftButtonUp="btnEliminarCancelarStock_Click" Visibility="Hidden">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnModificarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarStock_Click" Source="imagenes/edit.png" />
-                            <Image x:Name="btnModificarConfirmarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarConfirmarStock_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
-                            <Image x:Name="btnModificarCancelarStock" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCancelarStock_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border x:Name="btnModificarStock" MouseLeftButtonUp="btnModificarStock_Click" Style="{StaticResource BordeConAnimaciones}">
+                                <Image  HorizontalAlignment="Left" Margin="10" Source="imagenes/edit.png" />
+                            </Border>
+                            <Border x:Name="btnModificarConfirmarStock" MouseLeftButtonUp="btnModificarConfirmarStock_Click" Visibility="Hidden" Style="{StaticResource BordeConAnimaciones}">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border x:Name="btnModificarCancelarStock"  MouseLeftButtonUp="btnModificarCancelarStock_Click" Visibility="Hidden" Style="{StaticResource BordeConAnimaciones}">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -298,19 +314,37 @@
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnAñadirProveedor"  HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirProveedor_Click" Source="imagenes/add.png" Stretch="Fill" />
-                            <Image x:Name="btnAñadirConfirmarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirConfirmarProveedor_Click" Source="imagenes/confirm.png" Visibility="Hidden" />
-                            <Image x:Name="btnAñadirCancelarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCancelarProveedor_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border x:Name="btnAñadirProveedor" MouseLeftButtonUp="btnAñadirProveedor_Click" Style="{StaticResource BordeConAnimaciones}">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/add.png" Stretch="Fill" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}"  x:Name="btnAñadirConfirmarProveedor" Visibility="Hidden" MouseLeftButtonUp="btnAñadirConfirmarProveedor_Click">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnAñadirCancelarProveedor" MouseLeftButtonUp="btnAñadirCancelarProveedor_Click" Visibility="Hidden">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnEliminarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarProveedor_Click" Source="imagenes/delete.png" />
-                            <Image x:Name="btnEliminarConfirmarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarConfirmarProveedor_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
-                            <Image x:Name="btnEliminarCancelarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCancelarProveedor_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarProveedor" MouseLeftButtonUp="btnEliminarProveedor_Click">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/delete.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarConfirmarProveedor" MouseLeftButtonUp="btnEliminarConfirmarProveedor_Click" Visibility="Hidden">
+                                <Image HorizontalAlignment="Left" Margin="10"  Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarCancelarProveedor" MouseLeftButtonUp="btnEliminarCancelarProveedor_Click" Visibility="Hidden">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnModificarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarProveedor_Click" Source="imagenes/edit.png" />
-                            <Image x:Name="btnModificarConfirmarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarConfirmarProveedor_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
-                            <Image x:Name="btnModificarCancelarProveedor" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCancelarProveedor_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border x:Name="btnModificarProveedor" MouseLeftButtonUp="btnModificarProveedor_Click" Style="{StaticResource BordeConAnimaciones}">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/edit.png" />
+                            </Border>
+                            <Border x:Name="btnModificarConfirmarProveedor" MouseLeftButtonUp="btnModificarConfirmarProveedor_Click" Visibility="Hidden" Style="{StaticResource BordeConAnimaciones}">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border x:Name="btnModificarCancelarProveedor"  MouseLeftButtonUp="btnModificarCancelarProveedor_Click" Visibility="Hidden" Style="{StaticResource BordeConAnimaciones}">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -358,19 +392,37 @@
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnAñadirCliente"  HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCliente_Click" Source="imagenes/add.png" Stretch="Fill" />
-                            <Image x:Name="btnAñadirConfirmarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirConfirmarCliente_Click" Source="imagenes/confirm.png" Visibility="Hidden" />
-                            <Image x:Name="btnAñadirCancelarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnAñadirCancelarCliente_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border x:Name="btnAñadirCliente" MouseLeftButtonUp="btnAñadirCliente_Click" Style="{StaticResource BordeConAnimaciones}">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/add.png" Stretch="Fill" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}"  x:Name="btnAñadirConfirmarCliente" Visibility="Hidden" MouseLeftButtonUp="btnAñadirConfirmarCliente_Click">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnAñadirCancelarCliente" MouseLeftButtonUp="btnAñadirCancelarCliente_Click" Visibility="Hidden">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnEliminarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCliente_Click" Source="imagenes/delete.png" />
-                            <Image x:Name="btnEliminarConfirmarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarConfirmarCliente_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
-                            <Image x:Name="btnEliminarCancelarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnEliminarCancelarCliente_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarCliente" MouseLeftButtonUp="btnEliminarCliente_Click">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/delete.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarConfirmarCliente" MouseLeftButtonUp="btnEliminarConfirmarCliente_Click" Visibility="Hidden">
+                                <Image HorizontalAlignment="Left" Margin="10"  Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border Style="{StaticResource BordeConAnimaciones}" x:Name="btnEliminarCancelarCliente" MouseLeftButtonUp="btnEliminarCancelarCliente_Click" Visibility="Hidden">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Image x:Name="btnModificarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCliente_Click" Source="imagenes/edit.png" />
-                            <Image x:Name="btnModificarConfirmarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarConfirmarCliente_Click" Visibility="Hidden" Source="imagenes/confirm.png" />
-                            <Image x:Name="btnModificarCancelarCliente" HorizontalAlignment="Left" Margin="10" MouseLeftButtonUp="btnModificarCancelarCliente_Click" Visibility="Hidden" Source="imagenes/cancel.png" />
+                            <Border x:Name="btnModificarCliente" MouseLeftButtonUp="btnModificarCliente_Click" Style="{StaticResource BordeConAnimaciones}">
+                                <Image  HorizontalAlignment="Left" Margin="10" Source="imagenes/edit.png" />
+                            </Border>
+                            <Border x:Name="btnModificarConfirmarCliente" MouseLeftButtonUp="btnModificarConfirmarCliente_Click" Visibility="Hidden" Style="{StaticResource BordeConAnimaciones}">
+                                <Image  HorizontalAlignment="Left" Margin="10"  Source="imagenes/confirm.png" />
+                            </Border>
+                            <Border x:Name="btnModificarCancelarCliente"  MouseLeftButtonUp="btnModificarCancelarCliente_Click" Visibility="Hidden" Style="{StaticResource BordeConAnimaciones}">
+                                <Image HorizontalAlignment="Left" Margin="10" Source="imagenes/cancel.png" />
+                            </Border>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
