@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace TPV
 {
@@ -413,7 +403,7 @@ namespace TPV
             btnEliminarProveedor.IsEnabled = false;
             btnModificarProveedor.IsEnabled = false;
 
-            tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = false;
+            tbxCorreoProveedores.IsReadOnly = tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = false;
         }
 
         private void btnAñadirConfirmarProveedor_Click(object sender, RoutedEventArgs e)
@@ -425,7 +415,7 @@ namespace TPV
                 row["Apellidos"] = tbxApellidosProveedores.Text;
                 row["Direccion"] = tbxDireccionProveedores.Text;
                 row["Telefono"] = Convert.ToInt32(tbxTelefonoProveedores.Text);
-                row["Correo"] = tbxTelefonoProveedores.Text;
+                row["Correo"] = tbxCorreoProveedores.Text;
                 row["DNI"] = tbxDNIProveedores.Text;
 
                 tPVDataSet.Tables["ClientesVendedores"].Rows.Add(row);
@@ -445,7 +435,7 @@ namespace TPV
                 btnAñadirConfirmarProveedor.Visibility = Visibility.Hidden;
                 btnAñadirCancelarProveedor.Visibility = Visibility.Hidden;
 
-                tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
+                tbxCorreoProveedores.IsReadOnly = tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
             }
             catch (Exception exception)
             {
@@ -462,7 +452,7 @@ namespace TPV
             btnAñadirConfirmarProveedor.Visibility = Visibility.Hidden;
             btnAñadirCancelarProveedor.Visibility = Visibility.Hidden;
 
-            tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
+            tbxCorreoProveedores.IsReadOnly = tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
         }
 
         private void btnEliminarProveedor_Click(object sender, RoutedEventArgs e)
@@ -548,7 +538,7 @@ namespace TPV
                 btnModificarConfirmarProveedor.Visibility = Visibility.Hidden;
                 btnModificarCancelarProveedor.Visibility = Visibility.Hidden;
 
-                tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
+                tbxCorreoProveedores.IsReadOnly = tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
             }
             catch (Exception exception)
             {
@@ -565,7 +555,7 @@ namespace TPV
             btnModificarConfirmarProveedor.Visibility = Visibility.Hidden;
             btnModificarCancelarProveedor.Visibility = Visibility.Hidden;
 
-            tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
+            tbxCorreoProveedores.IsReadOnly = tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = true;
         }
 
         #endregion Proveedores
@@ -602,7 +592,7 @@ namespace TPV
             btnEliminarCliente.IsEnabled = false;
             btnModificarCliente.IsEnabled = false;
 
-            tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = false;
+            tbxCorreoClientes.IsReadOnly = tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = false;
         }
 
         private void btnAñadirConfirmarCliente_Click(object sender, RoutedEventArgs e)
@@ -614,7 +604,7 @@ namespace TPV
                 row["Apellidos"] = tbxApellidosClientes.Text;
                 row["Direccion"] = tbxDireccionClientes.Text;
                 row["Telefono"] = Convert.ToInt32(tbxTelefonoClientes.Text);
-                row["Correo"] = tbxTelefonoClientes.Text;
+                row["Correo"] = tbxCorreoClientes.Text;
                 row["DNI"] = tbxDNIClientes.Text;
 
                 tPVDataSet.Tables["ClientesCompradores"].Rows.Add(row);
@@ -634,7 +624,7 @@ namespace TPV
                 btnAñadirConfirmarCliente.Visibility = Visibility.Hidden;
                 btnAñadirCancelarCliente.Visibility = Visibility.Hidden;
 
-                tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
+                tbxCorreoClientes.IsReadOnly = tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
             }
             catch (Exception exception)
             {
@@ -651,7 +641,7 @@ namespace TPV
             btnAñadirConfirmarCliente.Visibility = Visibility.Hidden;
             btnAñadirCancelarCliente.Visibility = Visibility.Hidden;
 
-            tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
+            tbxCorreoClientes.IsReadOnly = tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
         }
 
         private void btnEliminarCliente_Click(object sender, RoutedEventArgs e)
@@ -698,7 +688,7 @@ namespace TPV
             btnEliminarConfirmarCliente.Visibility = Visibility.Hidden;
             btnEliminarCancelarCliente.Visibility = Visibility.Hidden;
 
-            tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
+            tbxCorreoClientes.IsReadOnly = tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
         }
 
         private void btnModificarCliente_Click(object sender, RoutedEventArgs e)
@@ -710,7 +700,7 @@ namespace TPV
             btnEliminarCliente.IsEnabled = false;
             btnModificarCliente.IsEnabled = false;
 
-            tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = false;
+            tbxCorreoClientes.IsReadOnly = tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = false;
         }
 
         private void btnModificarConfirmarCliente_Click(object sender, RoutedEventArgs e)
@@ -725,7 +715,7 @@ namespace TPV
                 row["Apellidos"] = tbxApellidosClientes.Text;
                 row["Direccion"] = tbxDireccionClientes.Text;
                 row["Telefono"] = Convert.ToInt32(tbxTelefonoClientes.Text);
-                row["Correo"] = tbxTelefonoClientes.Text;
+                row["Correo"] = tbxCorreoClientes.Text;
                 row["DNI"] = tbxDNIClientes.Text;
 
                 tPVDataSetClientesCompradoresTableAdapter.Update(tPVDataSet);
@@ -842,14 +832,9 @@ namespace TPV
 
         private void btnTerminarVenta_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (cbxClienteCompras.SelectedItem == null)
+            if (cbxClienteVentas.SelectedItem == null)
             {
-                if (MessageBox.Show("No ha seleccionado a ningún cliente. ¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    tPVDataSetCabecerasVentasTableAdapter.Update(tPVDataSet);
-                    tPVDataSetLineasVentasTableAdapter.Update(tPVDataSet);
-                    tPVDataSetProductosTableAdapter.Update(tPVDataSet);
-                }
+                MessageBox.Show("Debe seleccionar un cliente.", "Completar venta", MessageBoxButton.OK, MessageBoxImage.Hand);
             }
             else if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -991,12 +976,7 @@ namespace TPV
         {
             if (cbxClienteCompras.SelectedItem == null)
             {
-                if (MessageBox.Show("No ha seleccionado a ningún cliente. ¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    tPVDataSetCabecerasComprasTableAdapter.Update(tPVDataSet);
-                    tPVDataSetLineasComprasTableAdapter.Update(tPVDataSet);
-                    tPVDataSetProductosTableAdapter.Update(tPVDataSet);
-                }
+                MessageBox.Show("Debe seleccionar un cliente.", "Completar venta", MessageBoxButton.OK, MessageBoxImage.Hand);                
             }
             else if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -1021,6 +1001,77 @@ namespace TPV
                 btnTerminarCompra.IsEnabled = false;
                 cbxClienteCompras.SelectedItem = null;
             }
+        }
+
+        #endregion
+
+        #region Menu
+
+        private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Excel.Application xlApp;
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            object misValue = System.Reflection.Missing.Value;
+            DataRow[] lineasCompra;
+            DataRow cabeceraCompra;
+            DataRow producto;
+            DataRow cliente;
+            string[] datos;
+            int filasExcel = 1;
+
+            xlApp = new Excel.Application();
+            xlWorkBook = xlApp.Workbooks.Add(misValue);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            for (int i = 0; i < tPVDataSet.Tables["CabecerasCompras"].Rows.Count; i++)
+            {
+                cabeceraCompra = tPVDataSet.Tables["CabecerasCompras"].Rows[i];
+                lineasCompra = tPVDataSet.Tables["CabecerasCompras"].Rows[i].GetChildRows("FK_CabecerasCompras_LineasCompras");
+                for (int j = 0; j < lineasCompra.Length; j++)
+                {
+                    producto = tPVDataSet.Tables["Productos"].Rows.Find(lineasCompra[j]["idProducto"]);
+                    cliente = tPVDataSet.Tables["ClientesVendedores"].Rows.Find(cabeceraCompra["idCliente"]);
+
+                    datos = new string[] { cabeceraCompra["fecha"].ToString(), cliente["nombre"] + " " + cliente["apellidos"], cliente["DNI"].ToString(), producto["nombre"].ToString(), lineasCompra[j]["PrecioTotal"].ToString() };
+                    for (int k = 0; k < datos.Length; k++)
+                    {
+                        xlWorkSheet.Cells[filasExcel, k + 1] = datos[k];                        
+                    }
+                    filasExcel++;
+                }
+            }
+
+            xlWorkBook.SaveAs("compras.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            xlWorkBook.Close(true, misValue, misValue);
+            xlApp.Quit();
+
+            releaseObject(xlWorkSheet);
+            releaseObject(xlWorkBook);
+            releaseObject(xlApp);
+        }
+
+        private void releaseObject(object obj)
+        {
+            try
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+                MessageBox.Show("Exception Occured while releasing object " + ex.ToString());
+            }
+            finally
+            {
+                GC.Collect();
+            }
+        }
+
+        private void Border_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
+        {
+
         }
 
         #endregion
