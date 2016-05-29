@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace TPV
 {
@@ -14,8 +16,6 @@ namespace TPV
     {
         // Numero de productos añadidos a la ventana de venta
         int numProductosResumenVenta;
-        // Total de la venta
-        decimal totalVenta;
         // id de cabecera de venta
         int idCabeceraVenta;
         // Datos de la tabla resumen de venta
@@ -23,8 +23,6 @@ namespace TPV
 
         // Numero de productos añadidos a la ventana de compra
         int numProductosResumenCompra;
-        // Total de la compra
-        decimal totalCompra;
         // id de cabecera de compra
         int idCabeceraCompra;
         // Datos de la tabla resumen de compra
@@ -48,10 +46,7 @@ namespace TPV
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             numProductosResumenVenta = 0;
-            totalVenta = 0;
-
             numProductosResumenCompra = 0;
-            totalCompra = 0;
 
             tPVDataSet = ((TPV.TPVDataSet)(this.FindResource("tPVDataSet")));
             // Load data into the table Productos. You can modify this code as needed.
@@ -90,52 +85,30 @@ namespace TPV
             System.Windows.Data.CollectionViewSource lineasComprasViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("lineasComprasViewSource")));
             lineasComprasViewSource.View.MoveCurrentToFirst();
 
+            //Recargo las categorias
             cargarCategorias(cbxCategoriasStock);
-
             cargarCategorias(cbxAñadirCategoriaStock);
 
-            dataTableResumenVenta = new DataTable("resumenVenta");
-            dataTableResumenVenta.Columns.Add("Producto");
-            dataTableResumenVenta.Columns.Add("Precio");
-            dataTableResumenVenta.Columns.Add("Cantidad");
-            dataTableResumenVenta.Columns.Add("Descuento");
-            dataTableResumenVenta.Columns.Add("Total");
-
-            for (int i = 0; i < dataTableResumenVenta.Columns.Count; i++)
-            {
-                dataTableResumenVenta.Columns[i].ReadOnly = true;
-            }
-
+            // Crear la tabla de resumen de venta y asignarla al datagrid
+            dataTableResumenVenta = crearDataTableResumen("ResumenVenta");
             dataTableResumenVenta.RowDeleted += new DataRowChangeEventHandler(resumenVentaRow_Deleted);
-            dataTableResumenVenta.TableNewRow += new DataTableNewRowEventHandler(resumenVentaRow_Added);
 
             resumenVenta.DataContext = dataTableResumenVenta.DefaultView;
 
-            dataTableResumenCompra = new DataTable("resumenCompra");
-            dataTableResumenCompra.Columns.Add("Producto");
-            dataTableResumenCompra.Columns.Add("Precio");
-            dataTableResumenCompra.Columns.Add("Cantidad");
-            dataTableResumenCompra.Columns.Add("Descuento");
-            dataTableResumenCompra.Columns.Add("Total");
-
-            for (int i = 0; i < dataTableResumenCompra.Columns.Count; i++)
-            {
-                dataTableResumenCompra.Columns[i].ReadOnly = true;
-            }
-
+            // Crear la tabla de resumen de venta y asignarla al datagrid
+            dataTableResumenCompra = crearDataTableResumen("ResumenCompra");
             dataTableResumenCompra.RowDeleted += new DataRowChangeEventHandler(resumenCompraRow_Deleted);
-            dataTableResumenCompra.TableNewRow += new DataTableNewRowEventHandler(resumenCompraRow_Added);
 
             resumenCompra.DataContext = dataTableResumenCompra.DefaultView;
 
+            //Esconde el tabControl al iniciar
             tabControl.Visibility = Visibility.Hidden;
 
-            cbxClienteCompras.SelectedItem = null;
+            //Deseleccionar los combobox de cliente de compra y venta
+            cbxClienteCompras.SelectedItem = cbxClienteVentas.SelectedItem = null;
 
-            lvStock.SelectedItem = null;
 
         }
-
 
         #region Stock
 
@@ -511,7 +484,7 @@ namespace TPV
             btnEliminarProveedor.IsEnabled = false;
             btnModificarProveedor.IsEnabled = false;
 
-            tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = false;
+            tbxCorreoProveedores.IsReadOnly = tbxNombreProveedores.IsReadOnly = tbxApellidosProveedores.IsReadOnly = tbxTelefonoProveedores.IsReadOnly = tbxDireccionProveedores.IsReadOnly = tbxDNIProveedores.IsReadOnly = false;
         }
 
         private void btnModificarConfirmarProveedor_Click(object sender, RoutedEventArgs e)
@@ -727,7 +700,7 @@ namespace TPV
                 btnModificarConfirmarCliente.Visibility = Visibility.Hidden;
                 btnModificarCancelarCliente.Visibility = Visibility.Hidden;
 
-                tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
+                tbxCorreoClientes.IsReadOnly = tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
             }
             catch (Exception exception)
             {
@@ -744,7 +717,7 @@ namespace TPV
             btnModificarConfirmarCliente.Visibility = Visibility.Hidden;
             btnModificarCancelarCliente.Visibility = Visibility.Hidden;
 
-            tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
+            tbxCorreoClientes.IsReadOnly = tbxNombreClientes.IsReadOnly = tbxApellidosClientes.IsReadOnly = tbxDireccionClientes.IsReadOnly = tbxTelefonoClientes.IsReadOnly = tbxDNIClientes.IsReadOnly = true;
         }
 
         #endregion Clientes
@@ -753,8 +726,21 @@ namespace TPV
 
         private void btnVender_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            //Cargo las categorias de los productos
+            cargarCategorias(cbxCategoriasVender);
+
             tabControl.Visibility = Visibility.Visible;
             tabVender.IsSelected = true;
+        }
+
+        private void cbxCategoriasVender_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedCategoria = cbxCategoriasVender.SelectedItem as DataRowView;
+
+            if (selectedCategoria != null)
+                tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "Categoria like \'%" + selectedCategoria["Categoria"] + "%\'";
+            else
+                tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "";
         }
 
         private void tbxBuscadorVender_TextChanged(object sender, TextChangedEventArgs e)
@@ -772,11 +758,13 @@ namespace TPV
 
                 try
                 {
+                    // Recupero los datos del producto seleccionado
                     DataRow producto = tPVDataSet.Tables["Productos"].Rows.Find(productoSeleccionado["id"]);
 
                     decimal precio = Convert.ToDecimal(producto["precio"]);
                     int cantidad = Convert.ToInt32(tbxCantidadVender.Text);
 
+                    // Compruebo que haya suficientes unidades de ese producto
                     if (Convert.ToInt32(producto["cantidad"]) < cantidad)
                     {
                         throw new InvalidOperationException("No hay suficientes unidades del producto seleccionado para realizar la venta.");
@@ -786,6 +774,7 @@ namespace TPV
                         producto["cantidad"] = Convert.ToInt32(producto["cantidad"]) - cantidad;
                     }
 
+                    // Creo la nueva fila del resumen de venta y la añado al datagrid
                     DataRow r = dataTableResumenVenta.NewRow();
                     r["Producto"] = producto["nombre"];
                     r["Precio"] = producto["precio"];
@@ -794,17 +783,21 @@ namespace TPV
 
                     dataTableResumenVenta.Rows.Add(r);
 
+                    // Creo una nueva linea de venta
                     DataRow lineaVenta = tPVDataSet.Tables["LineasVentas"].NewRow();
 
+                    //Si es una venta nueva creo una cabecera de venta
                     if (numProductosResumenVenta == 0)
                     {
                         DataRow cabeceraVenta = tPVDataSet.Tables["CabecerasVentas"].NewRow();
-                        cabeceraVenta["idCliente"] = clienteSeleccionado["id"];
+                        if (cbxClienteVentas.SelectedItem != null)
+                            cabeceraVenta["idCliente"] = clienteSeleccionado["id"];
                         cabeceraVenta["fecha"] = DateTime.Now;
                         idCabeceraVenta = Convert.ToInt32(cabeceraVenta["id"]);
                         tPVDataSet.Tables["CabecerasVentas"].Rows.Add(cabeceraVenta);
                     }
 
+                    // Guardo los datos de la linea de venta
                     lineaVenta["idCabecera"] = idCabeceraVenta;
                     lineaVenta["idProducto"] = productoSeleccionado["id"];
                     lineaVenta["Cantidad"] = Convert.ToInt32(tbxCantidadVender.Text);
@@ -814,9 +807,10 @@ namespace TPV
 
                     tPVDataSet.Tables["LineasVentas"].Rows.Add(lineaVenta);
 
-                    totalVenta += precio * cantidad;
+                    tbxTotalVenta.Text = dataTableResumenVenta.Compute("SUM(Total)", String.Empty).ToString();
 
-                    tbxTotalVenta.Text = totalVenta.ToString();
+                    //Habilitar el botón de terminar venta
+                    btnTerminarVenta.IsEnabled = true;
                 }
                 catch (Exception exception)
                 {
@@ -844,11 +838,6 @@ namespace TPV
             }
         }
 
-        private void resumenVentaRow_Added(object sender, DataTableNewRowEventArgs e)
-        {
-            btnTerminarVenta.IsEnabled = true;
-        }
-
         private void resumenVentaRow_Deleted(object sender, DataRowChangeEventArgs e)
         {
             numProductosResumenVenta--;
@@ -859,6 +848,8 @@ namespace TPV
                 btnTerminarVenta.IsEnabled = false;
                 cbxClienteVentas.SelectedItem = null;
             }
+
+            tbxTotalVenta.Text = dataTableResumenVenta.Compute("SUM(Total)", String.Empty).ToString();
         }
         #endregion        
 
@@ -866,6 +857,9 @@ namespace TPV
 
         private void btnComprar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            //Cargo las categorias de los productos
+            cargarCategorias(cbxCategoriasComprar);
+
             tabControl.Visibility = Visibility.Visible;
             tabComprar.IsSelected = true;
         }
@@ -875,9 +869,23 @@ namespace TPV
             tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "nombre like \'%" + tbxBuscadorComprar.Text + "%\'";
         }
 
+        private void cbxCategoriasComprar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedCategoria = cbxCategoriasComprar.SelectedItem as DataRowView;
+
+            if (selectedCategoria != null)
+                tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "Categoria like \'%" + selectedCategoria["Categoria"] + "%\'";
+            else
+                tPVDataSet.Tables["Productos"].DefaultView.RowFilter = "";
+        }
+
         private void tbxNuevoProductoCompra_TextChanged(object sender, TextChangedEventArgs e)
         {
             lvComprar.SelectedItem = null;
+
+            if (tbxNuevoProductoCompra.Text.Length == 0)
+                tbxPrecioComprar.IsEnabled = false;
+            else tbxPrecioComprar.IsEnabled = true;
         }
 
         private void btnAñadirProductoCompra_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -942,7 +950,8 @@ namespace TPV
                     if (numProductosResumenCompra == 0)
                     {
                         DataRow cabeceraCompra = tPVDataSet.Tables["CabecerasCompras"].NewRow();
-                        cabeceraCompra["idCliente"] = clienteSeleccionado["id"];
+                        if (cbxClienteCompras.SelectedItem != null)
+                            cabeceraCompra["idCliente"] = clienteSeleccionado["id"];
                         cabeceraCompra["fecha"] = DateTime.Now;
                         idCabeceraCompra = Convert.ToInt32(cabeceraCompra["id"]);
                         tPVDataSet.Tables["CabecerasCompras"].Rows.Add(cabeceraCompra);
@@ -957,9 +966,7 @@ namespace TPV
 
                     tPVDataSet.Tables["LineasCompras"].Rows.Add(lineaCompra);
 
-                    totalCompra += precio * cantidad;
-
-                    tbxTotalCompra.Text = totalCompra.ToString();
+                    tbxTotalCompra.Text = dataTableResumenCompra.Compute("SUM(Total)", String.Empty).ToString();
                 }
                 catch (Exception exception)
                 {
@@ -976,7 +983,7 @@ namespace TPV
         {
             if (cbxClienteCompras.SelectedItem == null)
             {
-                MessageBox.Show("Debe seleccionar un cliente.", "Completar venta", MessageBoxButton.OK, MessageBoxImage.Hand);                
+                MessageBox.Show("Debe seleccionar un cliente.", "Completar venta", MessageBoxButton.OK, MessageBoxImage.Hand);
             }
             else if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -986,28 +993,24 @@ namespace TPV
             }
         }
 
-        private void resumenCompraRow_Added(object sender, DataTableNewRowEventArgs e)
-        {
-            btnTerminarCompra.IsEnabled = true;
-        }
-
         private void resumenCompraRow_Deleted(object sender, DataRowChangeEventArgs e)
         {
             numProductosResumenCompra--;
 
             if (numProductosResumenCompra == 0)
             {
-                tPVDataSet.Tables["CabecerasCompra"].Rows.Find(idCabeceraCompra).Delete();
+                tPVDataSet.Tables["CabecerasCompras"].Rows.Find(idCabeceraCompra).Delete();
                 btnTerminarCompra.IsEnabled = false;
                 cbxClienteCompras.SelectedItem = null;
             }
+            tbxTotalCompra.Text = dataTableResumenCompra.Compute("SUM(Total)", String.Empty).ToString();
         }
 
         #endregion
 
         #region Menu
 
-        private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void btnExportarComprasExcel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Excel.Application xlApp;
             Excel.Workbook xlWorkBook;
@@ -1019,36 +1022,137 @@ namespace TPV
             DataRow cliente;
             string[] datos;
             int filasExcel = 1;
+            string rutaGuardado = "";
 
-            xlApp = new Excel.Application();
-            xlWorkBook = xlApp.Workbooks.Add(misValue);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-            for (int i = 0; i < tPVDataSet.Tables["CabecerasCompras"].Rows.Count; i++)
+            try
             {
-                cabeceraCompra = tPVDataSet.Tables["CabecerasCompras"].Rows[i];
-                lineasCompra = tPVDataSet.Tables["CabecerasCompras"].Rows[i].GetChildRows("FK_CabecerasCompras_LineasCompras");
-                for (int j = 0; j < lineasCompra.Length; j++)
-                {
-                    producto = tPVDataSet.Tables["Productos"].Rows.Find(lineasCompra[j]["idProducto"]);
-                    cliente = tPVDataSet.Tables["ClientesVendedores"].Rows.Find(cabeceraCompra["idCliente"]);
 
-                    datos = new string[] { cabeceraCompra["fecha"].ToString(), cliente["nombre"] + " " + cliente["apellidos"], cliente["DNI"].ToString(), producto["nombre"].ToString(), lineasCompra[j]["PrecioTotal"].ToString() };
-                    for (int k = 0; k < datos.Length; k++)
+                xlApp = new Excel.Application();
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                fbd.ShowDialog();
+
+                if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    rutaGuardado = fbd.SelectedPath + "\\";
+                }
+
+
+                for (int i = 0; i < tPVDataSet.Tables["CabecerasCompras"].Rows.Count; i++)
+                {
+                    cabeceraCompra = tPVDataSet.Tables["CabecerasCompras"].Rows[i];
+                    lineasCompra = tPVDataSet.Tables["CabecerasCompras"].Rows[i].GetChildRows("FK_CabecerasCompras_LineasCompras");
+                    for (int j = 0; j < lineasCompra.Length; j++)
                     {
-                        xlWorkSheet.Cells[filasExcel, k + 1] = datos[k];                        
+                        producto = tPVDataSet.Tables["Productos"].Rows.Find(lineasCompra[j]["idProducto"]);
+                        cliente = tPVDataSet.Tables["ClientesVendedores"].Rows.Find(cabeceraCompra["idCliente"]);
+
+                        datos = new string[] { cabeceraCompra["fecha"].ToString(), cliente["nombre"] + " " + cliente["apellidos"], cliente["DNI"].ToString(), producto["nombre"].ToString(), lineasCompra[j]["PrecioTotal"].ToString() };
+                        for (int k = 0; k < datos.Length; k++)
+                        {
+                            xlWorkSheet.Cells[filasExcel, k + 1] = datos[k];
+                        }
+                        filasExcel++;
                     }
-                    filasExcel++;
+                }
+
+                xlWorkBook.SaveAs(rutaGuardado + "compras.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                releaseObject(xlWorkSheet);
+                releaseObject(xlWorkBook);
+                releaseObject(xlApp);
+
+                MessageBox.Show("Archivo Excel creado, puedes encontrarlo en " + rutaGuardado);
+            }
+            catch (System.Runtime.InteropServices.COMException exception)
+            {
+                if (exception.Message != "Excepción de HRESULT: 0x800A03EC")
+                {
+                    MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-            xlWorkBook.SaveAs("compras.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-            xlWorkBook.Close(true, misValue, misValue);
-            xlApp.Quit();
+        private void btnExportarVentasExcel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Excel.Application xlApp;
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            object misValue = System.Reflection.Missing.Value;
+            DataRow[] lineasVenta;
+            DataRow cabeceraVenta;
+            DataRow producto;
+            DataRow cliente;
+            string[] datos;
+            int filasExcel = 1;
+            string rutaGuardado = "";
 
-            releaseObject(xlWorkSheet);
-            releaseObject(xlWorkBook);
-            releaseObject(xlApp);
+
+            try
+            {
+                xlApp = new Excel.Application();
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+                fbd.ShowDialog();
+
+                if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    rutaGuardado = fbd.SelectedPath + "\\";
+                }
+
+
+                for (int i = 0; i < tPVDataSet.Tables["CabecerasVentas"].Rows.Count; i++)
+                {
+                    cabeceraVenta = tPVDataSet.Tables["CabecerasVentas"].Rows[i];
+                    lineasVenta = tPVDataSet.Tables["CabecerasVentas"].Rows[i].GetChildRows("FK_CabecerasVentas_LineasVentas");
+                    for (int j = 0; j < lineasVenta.Length; j++)
+                    {
+                        producto = tPVDataSet.Tables["Productos"].Rows.Find(lineasVenta[j]["idProducto"]);
+                        cliente = tPVDataSet.Tables["ClientesCompradores"].Rows.Find(cabeceraVenta["idCliente"]);
+
+                        datos = new string[] { cabeceraVenta["fecha"].ToString(), cliente["nombre"] + " " + cliente["apellidos"], cliente["DNI"].ToString(), producto["nombre"].ToString(), lineasVenta[j]["PrecioTotal"].ToString() };
+                        for (int k = 0; k < datos.Length; k++)
+                        {
+                            xlWorkSheet.Cells[filasExcel, k + 1] = datos[k];
+                        }
+                        filasExcel++;
+                    }
+                }
+
+                xlWorkBook.SaveAs(rutaGuardado + "Ventas.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                releaseObject(xlWorkSheet);
+                releaseObject(xlWorkBook);
+                releaseObject(xlApp);
+
+                MessageBox.Show("Archivo Excel creado, puedes encontrarlo en " + rutaGuardado);
+            }
+            catch (System.Runtime.InteropServices.COMException exception)
+            {
+                if (exception.Message != "Excepción de HRESULT: 0x800A03EC")
+                {
+                    MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void releaseObject(object obj)
@@ -1069,11 +1173,6 @@ namespace TPV
             }
         }
 
-        private void Border_MouseLeftButtonUp_1(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
         #endregion
 
         private void cargarCategorias(ComboBox cbx)
@@ -1086,5 +1185,46 @@ namespace TPV
             cbx.SelectedValuePath = "Categoria";
             cbx.DisplayMemberPath = "Categoria";
         }
+
+        private DataTable crearDataTableResumen(string nombre)
+        {
+            DataTable dataTableResumen = new DataTable(nombre);
+            dataTableResumen.Columns.Add("Producto");
+            dataTableResumen.Columns.Add("Precio");
+            dataTableResumen.Columns["Precio"].DataType = System.Type.GetType("System.Decimal");
+            dataTableResumen.Columns.Add("Cantidad");
+            dataTableResumen.Columns["Cantidad"].DataType = System.Type.GetType("System.Int32");
+            dataTableResumen.Columns.Add("Total");
+            dataTableResumen.Columns["Total"].DataType = System.Type.GetType("System.Decimal");
+
+            dataTableResumen.Columns["Producto"].ReadOnly = true;
+            dataTableResumen.Columns["Total"].ReadOnly = true;
+
+            dataTableResumen.Columns["Total"].Expression = "(Precio * Cantidad)";
+
+            return dataTableResumen;
+        }
+
+        public static bool onlyInteger(string text)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            return !regex.IsMatch(text);
+        }
+        public static bool onlyDecimal(string text)
+        {
+            Regex regex = new Regex("[^0-9.,]+");
+            return !regex.IsMatch(text);
+        }
+
+        private void tbxInteger_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !onlyInteger(e.Text);
+        }
+
+        private void tbxDecimal_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !onlyInteger(e.Text);
+        }
+        
     }
 }

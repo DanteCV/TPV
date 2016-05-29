@@ -42,13 +42,13 @@ namespace TPV {
         
         private global::System.Data.DataRelation relationFK_ClientesCompradores_CabecerasVentas;
         
-        private global::System.Data.DataRelation relationFK_CabecerasCompras_LineasCompras;
-        
         private global::System.Data.DataRelation relationFK_Productos_LineasCompras;
         
-        private global::System.Data.DataRelation relationFK_Productos_LineasVentas;
+        private global::System.Data.DataRelation relationFK_CabecerasCompras_LineasCompras;
         
         private global::System.Data.DataRelation relationFK_CabecerasVentas_LineasVentas;
+        
+        private global::System.Data.DataRelation relationFK_Productos_LineasVentas;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -352,10 +352,10 @@ namespace TPV {
             }
             this.relationFK_ClientesVendedores_CabecerasCompras = this.Relations["FK_ClientesVendedores_CabecerasCompras"];
             this.relationFK_ClientesCompradores_CabecerasVentas = this.Relations["FK_ClientesCompradores_CabecerasVentas"];
-            this.relationFK_CabecerasCompras_LineasCompras = this.Relations["FK_CabecerasCompras_LineasCompras"];
             this.relationFK_Productos_LineasCompras = this.Relations["FK_Productos_LineasCompras"];
-            this.relationFK_Productos_LineasVentas = this.Relations["FK_Productos_LineasVentas"];
+            this.relationFK_CabecerasCompras_LineasCompras = this.Relations["FK_CabecerasCompras_LineasCompras"];
             this.relationFK_CabecerasVentas_LineasVentas = this.Relations["FK_CabecerasVentas_LineasVentas"];
+            this.relationFK_Productos_LineasVentas = this.Relations["FK_Productos_LineasVentas"];
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -395,13 +395,6 @@ namespace TPV {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.SetNull;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
-            fkc = new global::System.Data.ForeignKeyConstraint("FK_CabecerasCompras_LineasCompras", new global::System.Data.DataColumn[] {
-                        this.tableCabecerasCompras.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasCompras.idCabeceraColumn});
-            this.tableLineasCompras.Constraints.Add(fkc);
-            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
-            fkc.DeleteRule = global::System.Data.Rule.Cascade;
-            fkc.UpdateRule = global::System.Data.Rule.Cascade;
             fkc = new global::System.Data.ForeignKeyConstraint("FK_Productos_LineasCompras", new global::System.Data.DataColumn[] {
                         this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableLineasCompras.idProductoColumn});
@@ -409,12 +402,12 @@ namespace TPV {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.SetNull;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
-            fkc = new global::System.Data.ForeignKeyConstraint("FK_Productos_LineasVentas", new global::System.Data.DataColumn[] {
-                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasVentas.idProductoColumn});
-            this.tableLineasVentas.Constraints.Add(fkc);
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_CabecerasCompras_LineasCompras", new global::System.Data.DataColumn[] {
+                        this.tableCabecerasCompras.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasCompras.idCabeceraColumn});
+            this.tableLineasCompras.Constraints.Add(fkc);
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
-            fkc.DeleteRule = global::System.Data.Rule.SetNull;
+            fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
             fkc = new global::System.Data.ForeignKeyConstraint("FK_CabecerasVentas_LineasVentas", new global::System.Data.DataColumn[] {
                         this.tableCabecerasVentas.idColumn}, new global::System.Data.DataColumn[] {
@@ -422,6 +415,13 @@ namespace TPV {
             this.tableLineasVentas.Constraints.Add(fkc);
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
+            fkc.UpdateRule = global::System.Data.Rule.Cascade;
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_Productos_LineasVentas", new global::System.Data.DataColumn[] {
+                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasVentas.idProductoColumn});
+            this.tableLineasVentas.Constraints.Add(fkc);
+            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
+            fkc.DeleteRule = global::System.Data.Rule.SetNull;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
             this.relationFK_ClientesVendedores_CabecerasCompras = new global::System.Data.DataRelation("FK_ClientesVendedores_CabecerasCompras", new global::System.Data.DataColumn[] {
                         this.tableClientesVendedores.idColumn}, new global::System.Data.DataColumn[] {
@@ -431,22 +431,22 @@ namespace TPV {
                         this.tableClientesCompradores.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableCabecerasVentas.idClienteColumn}, false);
             this.Relations.Add(this.relationFK_ClientesCompradores_CabecerasVentas);
-            this.relationFK_CabecerasCompras_LineasCompras = new global::System.Data.DataRelation("FK_CabecerasCompras_LineasCompras", new global::System.Data.DataColumn[] {
-                        this.tableCabecerasCompras.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasCompras.idCabeceraColumn}, false);
-            this.Relations.Add(this.relationFK_CabecerasCompras_LineasCompras);
             this.relationFK_Productos_LineasCompras = new global::System.Data.DataRelation("FK_Productos_LineasCompras", new global::System.Data.DataColumn[] {
                         this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableLineasCompras.idProductoColumn}, false);
             this.Relations.Add(this.relationFK_Productos_LineasCompras);
-            this.relationFK_Productos_LineasVentas = new global::System.Data.DataRelation("FK_Productos_LineasVentas", new global::System.Data.DataColumn[] {
-                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tableLineasVentas.idProductoColumn}, false);
-            this.Relations.Add(this.relationFK_Productos_LineasVentas);
+            this.relationFK_CabecerasCompras_LineasCompras = new global::System.Data.DataRelation("FK_CabecerasCompras_LineasCompras", new global::System.Data.DataColumn[] {
+                        this.tableCabecerasCompras.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasCompras.idCabeceraColumn}, false);
+            this.Relations.Add(this.relationFK_CabecerasCompras_LineasCompras);
             this.relationFK_CabecerasVentas_LineasVentas = new global::System.Data.DataRelation("FK_CabecerasVentas_LineasVentas", new global::System.Data.DataColumn[] {
                         this.tableCabecerasVentas.idColumn}, new global::System.Data.DataColumn[] {
                         this.tableLineasVentas.idCabeceraColumn}, false);
             this.Relations.Add(this.relationFK_CabecerasVentas_LineasVentas);
+            this.relationFK_Productos_LineasVentas = new global::System.Data.DataRelation("FK_Productos_LineasVentas", new global::System.Data.DataColumn[] {
+                        this.tableProductos.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tableLineasVentas.idProductoColumn}, false);
+            this.Relations.Add(this.relationFK_Productos_LineasVentas);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1519,6 +1519,8 @@ namespace TPV {
             
             private global::System.Data.DataColumn columnDNI;
             
+            private global::System.Data.DataColumn columnCorreo1;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public ClientesVendedoresDataTable() {
@@ -1610,6 +1612,14 @@ namespace TPV {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Correo1Column {
+                get {
+                    return this.columnCorreo1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1645,7 +1655,7 @@ namespace TPV {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ClientesVendedoresRow AddClientesVendedoresRow(string Nombre, string Apellidos, string Direccion, string Correo, string Telefono, string DNI) {
+            public ClientesVendedoresRow AddClientesVendedoresRow(string Nombre, string Apellidos, string Direccion, string Correo, string Telefono, string DNI, string Correo1) {
                 ClientesVendedoresRow rowClientesVendedoresRow = ((ClientesVendedoresRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -1654,7 +1664,8 @@ namespace TPV {
                         Direccion,
                         Correo,
                         Telefono,
-                        DNI};
+                        DNI,
+                        Correo1};
                 rowClientesVendedoresRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowClientesVendedoresRow);
                 return rowClientesVendedoresRow;
@@ -1691,6 +1702,7 @@ namespace TPV {
                 this.columnCorreo = base.Columns["Correo"];
                 this.columnTelefono = base.Columns["Telefono"];
                 this.columnDNI = base.Columns["DNI"];
+                this.columnCorreo1 = base.Columns["Correo1"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1710,6 +1722,8 @@ namespace TPV {
                 base.Columns.Add(this.columnTelefono);
                 this.columnDNI = new global::System.Data.DataColumn("DNI", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDNI);
+                this.columnCorreo1 = new global::System.Data.DataColumn("Correo1", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCorreo1);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -1723,6 +1737,7 @@ namespace TPV {
                 this.columnTelefono.MaxLength = 50;
                 this.columnDNI.AllowDBNull = false;
                 this.columnDNI.MaxLength = 50;
+                this.columnCorreo1.MaxLength = 50;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3318,6 +3333,22 @@ namespace TPV {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Correo1 {
+                get {
+                    try {
+                        return ((string)(this[this.tableClientesVendedores.Correo1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Correo1\' in table \'ClientesVendedores\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableClientesVendedores.Correo1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsApellidosNull() {
                 return this.IsNull(this.tableClientesVendedores.ApellidosColumn);
             }
@@ -3362,6 +3393,18 @@ namespace TPV {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetTelefonoNull() {
                 this[this.tableClientesVendedores.TelefonoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCorreo1Null() {
+                return this.IsNull(this.tableClientesVendedores.Correo1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCorreo1Null() {
+                this[this.tableClientesVendedores.Correo1Column] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3457,23 +3500,23 @@ namespace TPV {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CabecerasComprasRow CabecerasComprasRow {
-                get {
-                    return ((CabecerasComprasRow)(this.GetParentRow(this.Table.ParentRelations["FK_CabecerasCompras_LineasCompras"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["FK_CabecerasCompras_LineasCompras"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public ProductosRow ProductosRow {
                 get {
                     return ((ProductosRow)(this.GetParentRow(this.Table.ParentRelations["FK_Productos_LineasCompras"])));
                 }
                 set {
                     this.SetParentRow(value, this.Table.ParentRelations["FK_Productos_LineasCompras"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public CabecerasComprasRow CabecerasComprasRow {
+                get {
+                    return ((CabecerasComprasRow)(this.GetParentRow(this.Table.ParentRelations["FK_CabecerasCompras_LineasCompras"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["FK_CabecerasCompras_LineasCompras"]);
                 }
             }
             
@@ -3583,23 +3626,23 @@ namespace TPV {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ProductosRow ProductosRow {
-                get {
-                    return ((ProductosRow)(this.GetParentRow(this.Table.ParentRelations["FK_Productos_LineasVentas"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["FK_Productos_LineasVentas"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CabecerasVentasRow CabecerasVentasRow {
                 get {
                     return ((CabecerasVentasRow)(this.GetParentRow(this.Table.ParentRelations["FK_CabecerasVentas_LineasVentas"])));
                 }
                 set {
                     this.SetParentRow(value, this.Table.ParentRelations["FK_CabecerasVentas_LineasVentas"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ProductosRow ProductosRow {
+                get {
+                    return ((ProductosRow)(this.GetParentRow(this.Table.ParentRelations["FK_Productos_LineasVentas"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["FK_Productos_LineasVentas"]);
                 }
             }
             
@@ -5033,10 +5076,11 @@ namespace TPV.TPVDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("Direccion", "Direccion");
             tableMapping.ColumnMappings.Add("Telefono", "Telefono");
             tableMapping.ColumnMappings.Add("DNI", "DNI");
+            tableMapping.ColumnMappings.Add("Correo", "Correo");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [main].[sqlite_default_schema].[ClientesCompradores] WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ([DNI] = @Original_DNI))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [main].[sqlite_default_schema].[ClientesCompradores] WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ((@IsNull_Correo = 1 AND [Correo] IS NULL) OR ([Correo] = @Original_Correo)) AND ([DNI] = @Original_DNI))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::System.Data.SQLite.SQLiteParameter param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original_id";
@@ -5098,6 +5142,21 @@ namespace TPV.TPVDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@IsNull_Correo";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Original_Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original_DNI";
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
@@ -5107,8 +5166,8 @@ namespace TPV.TPVDataSetTableAdapters {
             this._adapter.InsertCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
             this._adapter.InsertCommand.CommandText = "INSERT INTO [main].[sqlite_default_schema].[ClientesCompradores] ([id], [Nombre]," +
-                " [Apellidos], [Direccion], [Telefono], [DNI]) VALUES (@id, @Nombre, @Apellidos, " +
-                "@Direccion, @Telefono, @DNI)";
+                " [Apellidos], [Direccion], [Telefono], [Correo], [DNI]) VALUES (@id, @Nombre, @A" +
+                "pellidos, @Direccion, @Telefono, @Correo, @DNI)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@id";
@@ -5141,6 +5200,12 @@ namespace TPV.TPVDataSetTableAdapters {
             param.SourceColumn = "Telefono";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@DNI";
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
@@ -5148,7 +5213,7 @@ namespace TPV.TPVDataSetTableAdapters {
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [main].[sqlite_default_schema].[ClientesCompradores] SET [id] = @id, [Nombre] = @Nombre, [Apellidos] = @Apellidos, [Direccion] = @Direccion, [Telefono] = @Telefono, [DNI] = @DNI WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ([DNI] = @Original_DNI))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [main].[sqlite_default_schema].[ClientesCompradores] SET [id] = @id, [Nombre] = @Nombre, [Apellidos] = @Apellidos, [Direccion] = @Direccion, [Telefono] = @Telefono, [Correo] = @Correo, [DNI] = @DNI WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ((@IsNull_Correo = 1 AND [Correo] IS NULL) OR ([Correo] = @Original_Correo)) AND ([DNI] = @Original_DNI))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@id";
@@ -5179,6 +5244,12 @@ namespace TPV.TPVDataSetTableAdapters {
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
             param.SourceColumn = "Telefono";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@DNI";
@@ -5246,6 +5317,21 @@ namespace TPV.TPVDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@IsNull_Correo";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Original_Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original_DNI";
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
@@ -5267,7 +5353,8 @@ namespace TPV.TPVDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SQLite.SQLiteCommand[1];
             this._commandCollection[0] = new global::System.Data.SQLite.SQLiteCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT id, Nombre, Apellidos, Direccion, Telefono, DNI FROM ClientesCompradores";
+            this._commandCollection[0].CommandText = "SELECT id, Nombre, Apellidos, Direccion, Telefono, Correo, DNI FROM ClientesCompr" +
+                "adores";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -5328,7 +5415,7 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_DNI) {
+        public virtual int Delete(long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_Correo, string Original_DNI) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((long)(Original_id));
             if ((Original_Nombre == null)) {
                 throw new global::System.ArgumentNullException("Original_Nombre");
@@ -5360,11 +5447,19 @@ namespace TPV.TPVDataSetTableAdapters {
                 this.Adapter.DeleteCommand.Parameters[6].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[7].Value = ((string)(Original_Telefono));
             }
+            if ((Original_Correo == null)) {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((string)(Original_Correo));
+            }
             if ((Original_DNI == null)) {
                 throw new global::System.ArgumentNullException("Original_DNI");
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[8].Value = ((string)(Original_DNI));
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((string)(Original_DNI));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -5386,7 +5481,7 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(long id, string Nombre, string Apellidos, string Direccion, string Telefono, string DNI) {
+        public virtual int Insert(long id, string Nombre, string Apellidos, string Direccion, string Telefono, string Correo, string DNI) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((long)(id));
             if ((Nombre == null)) {
                 throw new global::System.ArgumentNullException("Nombre");
@@ -5412,11 +5507,17 @@ namespace TPV.TPVDataSetTableAdapters {
             else {
                 this.Adapter.InsertCommand.Parameters[4].Value = ((string)(Telefono));
             }
+            if ((Correo == null)) {
+                this.Adapter.InsertCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[5].Value = ((string)(Correo));
+            }
             if ((DNI == null)) {
                 throw new global::System.ArgumentNullException("DNI");
             }
             else {
-                this.Adapter.InsertCommand.Parameters[5].Value = ((string)(DNI));
+                this.Adapter.InsertCommand.Parameters[6].Value = ((string)(DNI));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -5438,7 +5539,7 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(long id, string Nombre, string Apellidos, string Direccion, string Telefono, string DNI, long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_DNI) {
+        public virtual int Update(long id, string Nombre, string Apellidos, string Direccion, string Telefono, string Correo, string DNI, long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_Correo, string Original_DNI) {
             this.Adapter.UpdateCommand.Parameters[0].Value = ((long)(id));
             if ((Nombre == null)) {
                 throw new global::System.ArgumentNullException("Nombre");
@@ -5464,48 +5565,62 @@ namespace TPV.TPVDataSetTableAdapters {
             else {
                 this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Telefono));
             }
+            if ((Correo == null)) {
+                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(Correo));
+            }
             if ((DNI == null)) {
                 throw new global::System.ArgumentNullException("DNI");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(DNI));
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((string)(DNI));
             }
-            this.Adapter.UpdateCommand.Parameters[6].Value = ((long)(Original_id));
+            this.Adapter.UpdateCommand.Parameters[7].Value = ((long)(Original_id));
             if ((Original_Nombre == null)) {
                 throw new global::System.ArgumentNullException("Original_Nombre");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(Original_Nombre));
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((string)(Original_Nombre));
             }
             if ((Original_Apellidos == null)) {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[10].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((string)(Original_Apellidos));
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((string)(Original_Apellidos));
             }
             if ((Original_Direccion == null)) {
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[11].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((string)(Original_Direccion));
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(Original_Direccion));
             }
             if ((Original_Telefono == null)) {
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[13].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((string)(Original_Telefono));
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((string)(Original_Telefono));
+            }
+            if ((Original_Correo == null)) {
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[16].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((string)(Original_Correo));
             }
             if ((Original_DNI == null)) {
                 throw new global::System.ArgumentNullException("Original_DNI");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[14].Value = ((string)(Original_DNI));
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((string)(Original_DNI));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -5527,8 +5642,8 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string Nombre, string Apellidos, string Direccion, string Telefono, string DNI, long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_DNI) {
-            return this.Update(Original_id, Nombre, Apellidos, Direccion, Telefono, DNI, Original_id, Original_Nombre, Original_Apellidos, Original_Direccion, Original_Telefono, Original_DNI);
+        public virtual int Update(string Nombre, string Apellidos, string Direccion, string Telefono, string Correo, string DNI, long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_Correo, string Original_DNI) {
+            return this.Update(Original_id, Nombre, Apellidos, Direccion, Telefono, Correo, DNI, Original_id, Original_Nombre, Original_Apellidos, Original_Direccion, Original_Telefono, Original_Correo, Original_DNI);
         }
     }
     
@@ -5659,10 +5774,12 @@ namespace TPV.TPVDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("Direccion", "Direccion");
             tableMapping.ColumnMappings.Add("Telefono", "Telefono");
             tableMapping.ColumnMappings.Add("DNI", "DNI");
+            tableMapping.ColumnMappings.Add("Correo", "Correo");
+            tableMapping.ColumnMappings.Add("Correo1", "Correo1");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [main].[sqlite_default_schema].[ClientesVendedores] WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ([DNI] = @Original_DNI))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [main].[sqlite_default_schema].[ClientesVendedores] WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ((@param3 = 1 AND [Correo] IS NULL) OR ([Correo] = @param2)) AND ([DNI] = @Original_DNI) AND ((@IsNull_Correo = 1 AND [Correo] IS NULL) OR ([Correo] = @Original_Correo)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::System.Data.SQLite.SQLiteParameter param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original_id";
@@ -5724,17 +5841,47 @@ namespace TPV.TPVDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@param3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@param2";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original_DNI";
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
             param.SourceColumn = "DNI";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@IsNull_Correo";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.SourceColumn = "Correo1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Original_Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
             this._adapter.InsertCommand.CommandText = "INSERT INTO [main].[sqlite_default_schema].[ClientesVendedores] ([id], [Nombre], " +
-                "[Apellidos], [Direccion], [Telefono], [DNI]) VALUES (@id, @Nombre, @Apellidos, @" +
-                "Direccion, @Telefono, @DNI)";
+                "[Apellidos], [Direccion], [Telefono], [Correo], [DNI], [Correo]) VALUES (@id, @N" +
+                "ombre, @Apellidos, @Direccion, @Telefono, @param1, @DNI, @Correo)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@id";
@@ -5767,14 +5914,26 @@ namespace TPV.TPVDataSetTableAdapters {
             param.SourceColumn = "Telefono";
             this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@param1";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
+            this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@DNI";
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
             param.SourceColumn = "DNI";
             this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo1";
+            this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [main].[sqlite_default_schema].[ClientesVendedores] SET [id] = @id, [Nombre] = @Nombre, [Apellidos] = @Apellidos, [Direccion] = @Direccion, [Telefono] = @Telefono, [DNI] = @DNI WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ([DNI] = @Original_DNI))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [main].[sqlite_default_schema].[ClientesVendedores] SET [id] = @id, [Nombre] = @Nombre, [Apellidos] = @Apellidos, [Direccion] = @Direccion, [Telefono] = @Telefono, [Correo] = @param1, [DNI] = @DNI, [Correo] = @Correo WHERE (([id] = @Original_id) AND ([Nombre] = @Original_Nombre) AND ((@IsNull_Apellidos = 1 AND [Apellidos] IS NULL) OR ([Apellidos] = @Original_Apellidos)) AND ((@IsNull_Direccion = 1 AND [Direccion] IS NULL) OR ([Direccion] = @Original_Direccion)) AND ((@IsNull_Telefono = 1 AND [Telefono] IS NULL) OR ([Telefono] = @Original_Telefono)) AND ((@param3 = 1 AND [Correo] IS NULL) OR ([Correo] = @param2)) AND ([DNI] = @Original_DNI) AND ((@IsNull_Correo = 1 AND [Correo] IS NULL) OR ([Correo] = @Original_Correo)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@id";
@@ -5807,10 +5966,22 @@ namespace TPV.TPVDataSetTableAdapters {
             param.SourceColumn = "Telefono";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@param1";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@DNI";
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
             param.SourceColumn = "DNI";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo1";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original_id";
@@ -5872,10 +6043,40 @@ namespace TPV.TPVDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@param3";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@param2";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original_DNI";
             param.DbType = global::System.Data.DbType.AnsiString;
             param.DbType = global::System.Data.DbType.AnsiString;
             param.SourceColumn = "DNI";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@IsNull_Correo";
+            param.DbType = global::System.Data.DbType.Int32;
+            param.DbType = global::System.Data.DbType.Int32;
+            param.SourceColumn = "Correo1";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            param.SourceColumnNullMapping = true;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Original_Correo";
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.DbType = global::System.Data.DbType.AnsiString;
+            param.SourceColumn = "Correo1";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
         }
@@ -5893,7 +6094,8 @@ namespace TPV.TPVDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SQLite.SQLiteCommand[1];
             this._commandCollection[0] = new global::System.Data.SQLite.SQLiteCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT id, Nombre, Apellidos, Direccion, Telefono, DNI FROM ClientesVendedores";
+            this._commandCollection[0].CommandText = "SELECT        id, Nombre, Apellidos, Direccion, Telefono, Correo, DNI, Correo\r\nFR" +
+                "OM            ClientesVendedores";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -5954,7 +6156,7 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_DNI) {
+        public virtual int Delete(long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string param2, string Original_DNI, string Original_Correo) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((long)(Original_id));
             if ((Original_Nombre == null)) {
                 throw new global::System.ArgumentNullException("Original_Nombre");
@@ -5986,11 +6188,26 @@ namespace TPV.TPVDataSetTableAdapters {
                 this.Adapter.DeleteCommand.Parameters[6].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[7].Value = ((string)(Original_Telefono));
             }
+            if ((param2 == null)) {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((string)(param2));
+            }
             if ((Original_DNI == null)) {
                 throw new global::System.ArgumentNullException("Original_DNI");
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[8].Value = ((string)(Original_DNI));
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((string)(Original_DNI));
+            }
+            if ((Original_Correo == null)) {
+                throw new global::System.ArgumentNullException("Original_Correo");
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[12].Value = ((string)(Original_Correo));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -6012,7 +6229,7 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(long id, string Nombre, string Apellidos, string Direccion, string Telefono, string DNI) {
+        public virtual int Insert(long id, string Nombre, string Apellidos, string Direccion, string Telefono, string param1, string DNI, string Correo) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((long)(id));
             if ((Nombre == null)) {
                 throw new global::System.ArgumentNullException("Nombre");
@@ -6038,11 +6255,23 @@ namespace TPV.TPVDataSetTableAdapters {
             else {
                 this.Adapter.InsertCommand.Parameters[4].Value = ((string)(Telefono));
             }
+            if ((param1 == null)) {
+                this.Adapter.InsertCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[5].Value = ((string)(param1));
+            }
             if ((DNI == null)) {
                 throw new global::System.ArgumentNullException("DNI");
             }
             else {
-                this.Adapter.InsertCommand.Parameters[5].Value = ((string)(DNI));
+                this.Adapter.InsertCommand.Parameters[6].Value = ((string)(DNI));
+            }
+            if ((Correo == null)) {
+                throw new global::System.ArgumentNullException("Correo");
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[7].Value = ((string)(Correo));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -6064,7 +6293,23 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(long id, string Nombre, string Apellidos, string Direccion, string Telefono, string DNI, long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_DNI) {
+        public virtual int Update(
+                    long id, 
+                    string Nombre, 
+                    string Apellidos, 
+                    string Direccion, 
+                    string Telefono, 
+                    string param1, 
+                    string DNI, 
+                    string Correo, 
+                    long Original_id, 
+                    string Original_Nombre, 
+                    string Original_Apellidos, 
+                    string Original_Direccion, 
+                    string Original_Telefono, 
+                    string param2, 
+                    string Original_DNI, 
+                    string Original_Correo) {
             this.Adapter.UpdateCommand.Parameters[0].Value = ((long)(id));
             if ((Nombre == null)) {
                 throw new global::System.ArgumentNullException("Nombre");
@@ -6090,48 +6335,75 @@ namespace TPV.TPVDataSetTableAdapters {
             else {
                 this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Telefono));
             }
+            if ((param1 == null)) {
+                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(param1));
+            }
             if ((DNI == null)) {
                 throw new global::System.ArgumentNullException("DNI");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(DNI));
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((string)(DNI));
             }
-            this.Adapter.UpdateCommand.Parameters[6].Value = ((long)(Original_id));
+            if ((Correo == null)) {
+                throw new global::System.ArgumentNullException("Correo");
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(Correo));
+            }
+            this.Adapter.UpdateCommand.Parameters[8].Value = ((long)(Original_id));
             if ((Original_Nombre == null)) {
                 throw new global::System.ArgumentNullException("Original_Nombre");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(Original_Nombre));
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((string)(Original_Nombre));
             }
             if ((Original_Apellidos == null)) {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((string)(Original_Apellidos));
-            }
-            if ((Original_Direccion == null)) {
                 this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[11].Value = global::System.DBNull.Value;
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((string)(Original_Direccion));
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((string)(Original_Apellidos));
             }
-            if ((Original_Telefono == null)) {
+            if ((Original_Direccion == null)) {
                 this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[13].Value = global::System.DBNull.Value;
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((string)(Original_Telefono));
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((string)(Original_Direccion));
+            }
+            if ((Original_Telefono == null)) {
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[15].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((string)(Original_Telefono));
+            }
+            if ((param2 == null)) {
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[17].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((string)(param2));
             }
             if ((Original_DNI == null)) {
                 throw new global::System.ArgumentNullException("Original_DNI");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[14].Value = ((string)(Original_DNI));
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((string)(Original_DNI));
+            }
+            if ((Original_Correo == null)) {
+                throw new global::System.ArgumentNullException("Original_Correo");
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((string)(Original_Correo));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -6153,8 +6425,8 @@ namespace TPV.TPVDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string Nombre, string Apellidos, string Direccion, string Telefono, string DNI, long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string Original_DNI) {
-            return this.Update(Original_id, Nombre, Apellidos, Direccion, Telefono, DNI, Original_id, Original_Nombre, Original_Apellidos, Original_Direccion, Original_Telefono, Original_DNI);
+        public virtual int Update(string Nombre, string Apellidos, string Direccion, string Telefono, string param1, string DNI, string Correo, long Original_id, string Original_Nombre, string Original_Apellidos, string Original_Direccion, string Original_Telefono, string param2, string Original_DNI, string Original_Correo) {
+            return this.Update(Original_id, Nombre, Apellidos, Direccion, Telefono, param1, DNI, Correo, Original_id, Original_Nombre, Original_Apellidos, Original_Direccion, Original_Telefono, param2, Original_DNI, Original_Correo);
         }
     }
     
