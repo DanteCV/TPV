@@ -143,7 +143,7 @@ namespace TPV
             cbxClienteCompras.SelectedItem = null;
 
             lvStock.SelectedItem = null;
-            
+
         }
 
 
@@ -350,7 +350,7 @@ namespace TPV
                 cargarCategorias(cbxCategoriasStock);
                 cargarCategorias(cbxAñadirCategoriaStock);
 
-                if(categoria != "")
+                if (categoria != "")
                     cbxAñadirCategoriaStock.Text = categoria;
             }
             catch (Exception exception)
@@ -779,56 +779,60 @@ namespace TPV
 
             if (tbxCantidadVender.Text.Length > 0)
             {
-                if (cbxClienteVentas.SelectedItem != null)
+
+                try
                 {
-                    try
+                    DataRow producto = tPVDataSet.Tables["Productos"].Rows.Find(productoSeleccionado["id"]);
+
+                    decimal precio = Convert.ToDecimal(producto["precio"]);
+                    int cantidad = Convert.ToInt32(tbxCantidadVender.Text);
+
+                    if (Convert.ToInt32(producto["cantidad"]) < cantidad)
                     {
-                        DataRow row = tPVDataSet.Tables["Productos"].Rows.Find(productoSeleccionado["id"]);
-
-                        decimal precio = Convert.ToDecimal(row["precio"]);
-                        int cantidad = Convert.ToInt32(tbxCantidadVender.Text);
-
-                        DataRow r = dataTableResumenVenta.NewRow();
-                        r["Producto"] = row["nombre"];
-                        r["Precio"] = row["precio"];
-                        r["Cantidad"] = tbxCantidadVender.Text;
-                        r["Total"] = precio * cantidad;
-
-                        dataTableResumenVenta.Rows.Add(r);
-
-                        DataRow lineaVenta = tPVDataSet.Tables["LineasVentas"].NewRow();
-
-                        if (numProductosResumenVenta == 0)
-                        {
-                            DataRow cabeceraVenta = tPVDataSet.Tables["CabecerasVentas"].NewRow();
-                            cabeceraVenta["idCliente"] = clienteSeleccionado["id"];
-                            cabeceraVenta["fecha"] = DateTime.Now;
-                            idCabeceraVenta = Convert.ToInt32(cabeceraVenta["id"]);
-                            tPVDataSet.Tables["CabecerasVentas"].Rows.Add(cabeceraVenta);
-                        }
-
-                        lineaVenta["idCabecera"] = idCabeceraVenta;
-                        lineaVenta["idProducto"] = productoSeleccionado["id"];
-                        lineaVenta["Cantidad"] = Convert.ToInt32(tbxCantidadVender.Text);
-                        lineaVenta["PrecioTotal"] = precio * cantidad;
-
-                        numProductosResumenVenta++;
-
-                        tPVDataSet.Tables["LineasVentas"].Rows.Add(lineaVenta);
-
-                        totalVenta += precio * cantidad;
-
-                        tbxTotalVenta.Text = totalVenta.ToString();
+                        throw new InvalidOperationException("No hay suficientes unidades del producto seleccionado para realizar la venta.");
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        producto["cantidad"] = Convert.ToInt32(producto["cantidad"]) - cantidad;
                     }
+
+                    DataRow r = dataTableResumenVenta.NewRow();
+                    r["Producto"] = producto["nombre"];
+                    r["Precio"] = producto["precio"];
+                    r["Cantidad"] = tbxCantidadVender.Text;
+                    r["Total"] = precio * cantidad;
+
+                    dataTableResumenVenta.Rows.Add(r);
+
+                    DataRow lineaVenta = tPVDataSet.Tables["LineasVentas"].NewRow();
+
+                    if (numProductosResumenVenta == 0)
+                    {
+                        DataRow cabeceraVenta = tPVDataSet.Tables["CabecerasVentas"].NewRow();
+                        cabeceraVenta["idCliente"] = clienteSeleccionado["id"];
+                        cabeceraVenta["fecha"] = DateTime.Now;
+                        idCabeceraVenta = Convert.ToInt32(cabeceraVenta["id"]);
+                        tPVDataSet.Tables["CabecerasVentas"].Rows.Add(cabeceraVenta);
+                    }
+
+                    lineaVenta["idCabecera"] = idCabeceraVenta;
+                    lineaVenta["idProducto"] = productoSeleccionado["id"];
+                    lineaVenta["Cantidad"] = Convert.ToInt32(tbxCantidadVender.Text);
+                    lineaVenta["PrecioTotal"] = precio * cantidad;
+
+                    numProductosResumenVenta++;
+
+                    tPVDataSet.Tables["LineasVentas"].Rows.Add(lineaVenta);
+
+                    totalVenta += precio * cantidad;
+
+                    tbxTotalVenta.Text = totalVenta.ToString();
                 }
-                else
+                catch (Exception exception)
                 {
-                    MessageBox.Show("Debe seleccionar un cliente antes de poder añadir un producto.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
             }
             else
             {
@@ -838,16 +842,26 @@ namespace TPV
 
         private void btnTerminarVenta_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (cbxClienteCompras.SelectedItem == null)
+            {
+                if (MessageBox.Show("No ha seleccionado a ningún cliente. ¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    tPVDataSetCabecerasVentasTableAdapter.Update(tPVDataSet);
+                    tPVDataSetLineasVentasTableAdapter.Update(tPVDataSet);
+                    tPVDataSetProductosTableAdapter.Update(tPVDataSet);
+                }
+            }
+            else if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 tPVDataSetCabecerasVentasTableAdapter.Update(tPVDataSet);
                 tPVDataSetLineasVentasTableAdapter.Update(tPVDataSet);
+                tPVDataSetProductosTableAdapter.Update(tPVDataSet);
             }
         }
 
         private void resumenVentaRow_Added(object sender, DataTableNewRowEventArgs e)
         {
-                btnTerminarVenta.IsEnabled = true;
+            btnTerminarVenta.IsEnabled = true;
         }
 
         private void resumenVentaRow_Deleted(object sender, DataRowChangeEventArgs e)
@@ -858,6 +872,7 @@ namespace TPV
             {
                 tPVDataSet.Tables["CabecerasVentas"].Rows.Find(idCabeceraVenta).Delete();
                 btnTerminarVenta.IsEnabled = false;
+                cbxClienteVentas.SelectedItem = null;
             }
         }
         #endregion        
@@ -890,83 +905,80 @@ namespace TPV
 
             if (tbxCantidadComprar.Text.Length > 0)
             {
-                if (cbxClienteCompras.SelectedItem != null)
+                try
                 {
-                    try
+                    // Si se selecciona un producto ya existente
+                    if (productoSeleccionado != null)
                     {
-                        if (productoSeleccionado != null)
-                        {
-                            DataRow producto = tPVDataSet.Tables["Productos"].Rows.Find(productoSeleccionado["id"]);
+                        DataRow producto = tPVDataSet.Tables["Productos"].Rows.Find(productoSeleccionado["id"]);
 
-                            idProductoAñadido = Convert.ToInt32(productoSeleccionado["id"]);
+                        idProductoAñadido = Convert.ToInt32(productoSeleccionado["id"]);
 
-                            precio = Convert.ToDecimal(producto["precio"]);
-                            cantidad = Convert.ToInt32(tbxCantidadComprar.Text);
+                        precio = Convert.ToDecimal(producto["precio"]);
+                        cantidad = Convert.ToInt32(tbxCantidadComprar.Text);
 
-                            DataRow productoAñadido = dataTableResumenCompra.NewRow();
-                            productoAñadido["Producto"] = producto["nombre"];
-                            productoAñadido["Precio"] = producto["precio"];
-                            productoAñadido["Cantidad"] = tbxCantidadComprar.Text;
-                            productoAñadido["Total"] = precio * cantidad;
+                        producto["cantidad"] = Convert.ToInt32(producto["cantidad"]) + cantidad;
 
-                            dataTableResumenCompra.Rows.Add(productoAñadido);
-                        }
-                        else
-                        {
-                            DataRow nuevoProducto = tPVDataSet.Tables["Productos"].NewRow();
+                        DataRow productoAñadido = dataTableResumenCompra.NewRow();
+                        productoAñadido["Producto"] = producto["nombre"];
+                        productoAñadido["Precio"] = producto["precio"];
+                        productoAñadido["Cantidad"] = tbxCantidadComprar.Text;
+                        productoAñadido["Total"] = precio * cantidad;
 
-                            idProductoAñadido = Convert.ToInt32(nuevoProducto["id"]);
-
-                            nuevoProducto["Nombre"] = tbxNuevoProductoCompra.Text;
-                            nuevoProducto["Cantidad"] = Convert.ToInt32(tbxCantidadComprar.Text);
-                            nuevoProducto["Precio"] = Convert.ToDecimal(tbxPrecioComprar.Text.Replace(".", ","));
-
-                            tPVDataSet.Tables["Productos"].Rows.Add(nuevoProducto);
-
-                            precio = Convert.ToDecimal(tbxPrecioComprar.Text);
-                            cantidad = Convert.ToInt32(tbxCantidadComprar.Text);
-
-                            DataRow productoAñadido = dataTableResumenCompra.NewRow();
-                            productoAñadido["Producto"] = nuevoProducto["nombre"];
-                            productoAñadido["Precio"] = nuevoProducto["precio"];
-                            productoAñadido["Cantidad"] = tbxCantidadComprar.Text;
-                            productoAñadido["Total"] = precio * cantidad;
-
-                            dataTableResumenCompra.Rows.Add(productoAñadido);
-                        }
-
-                        DataRow lineaCompra = tPVDataSet.Tables["LineasCompras"].NewRow();
-
-                        if (numProductosResumenCompra == 0)
-                        {
-                            DataRow cabeceraCompra = tPVDataSet.Tables["CabecerasCompras"].NewRow();
-                            cabeceraCompra["idCliente"] = clienteSeleccionado["id"];
-                            cabeceraCompra["fecha"] = DateTime.Now;
-                            idCabeceraCompra = Convert.ToInt32(cabeceraCompra["id"]);
-                            tPVDataSet.Tables["CabecerasCompras"].Rows.Add(cabeceraCompra);
-                        }
-
-                        lineaCompra["idCabecera"] = idCabeceraCompra;
-                        lineaCompra["idProducto"] = idProductoAñadido;
-                        lineaCompra["Cantidad"] = Convert.ToInt32(tbxCantidadComprar.Text);
-                        lineaCompra["PrecioTotal"] = precio * cantidad;
-
-                        numProductosResumenCompra++;
-
-                        tPVDataSet.Tables["LineasCompras"].Rows.Add(lineaCompra);
-
-                        totalCompra += precio * cantidad;
-
-                        tbxTotalCompra.Text = totalCompra.ToString();
+                        dataTableResumenCompra.Rows.Add(productoAñadido);
                     }
-                    catch (Exception exception)
+                    // Si se decide añadir un producto nuevo
+                    else
                     {
-                        MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        DataRow nuevoProducto = tPVDataSet.Tables["Productos"].NewRow();
+
+                        idProductoAñadido = Convert.ToInt32(nuevoProducto["id"]);
+
+                        nuevoProducto["Nombre"] = tbxNuevoProductoCompra.Text;
+                        nuevoProducto["Cantidad"] = Convert.ToInt32(tbxCantidadComprar.Text);
+                        nuevoProducto["Precio"] = Convert.ToDecimal(tbxPrecioComprar.Text.Replace(".", ","));
+
+                        tPVDataSet.Tables["Productos"].Rows.Add(nuevoProducto);
+
+                        precio = Convert.ToDecimal(tbxPrecioComprar.Text);
+                        cantidad = Convert.ToInt32(tbxCantidadComprar.Text);
+
+                        DataRow productoAñadido = dataTableResumenCompra.NewRow();
+                        productoAñadido["Producto"] = nuevoProducto["nombre"];
+                        productoAñadido["Precio"] = nuevoProducto["precio"];
+                        productoAñadido["Cantidad"] = tbxCantidadComprar.Text;
+                        productoAñadido["Total"] = precio * cantidad;
+
+                        dataTableResumenCompra.Rows.Add(productoAñadido);
                     }
+
+                    DataRow lineaCompra = tPVDataSet.Tables["LineasCompras"].NewRow();
+
+                    if (numProductosResumenCompra == 0)
+                    {
+                        DataRow cabeceraCompra = tPVDataSet.Tables["CabecerasCompras"].NewRow();
+                        cabeceraCompra["idCliente"] = clienteSeleccionado["id"];
+                        cabeceraCompra["fecha"] = DateTime.Now;
+                        idCabeceraCompra = Convert.ToInt32(cabeceraCompra["id"]);
+                        tPVDataSet.Tables["CabecerasCompras"].Rows.Add(cabeceraCompra);
+                    }
+
+                    lineaCompra["idCabecera"] = idCabeceraCompra;
+                    lineaCompra["idProducto"] = idProductoAñadido;
+                    lineaCompra["Cantidad"] = Convert.ToInt32(tbxCantidadComprar.Text);
+                    lineaCompra["PrecioTotal"] = precio * cantidad;
+
+                    numProductosResumenCompra++;
+
+                    tPVDataSet.Tables["LineasCompras"].Rows.Add(lineaCompra);
+
+                    totalCompra += precio * cantidad;
+
+                    tbxTotalCompra.Text = totalCompra.ToString();
                 }
-                else
+                catch (Exception exception)
                 {
-                    MessageBox.Show("Debe seleccionar un cliente antes de poder añadir un producto.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Error: " + exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
@@ -977,10 +989,20 @@ namespace TPV
 
         private void btnTerminarCompra_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (cbxClienteCompras.SelectedItem == null)
+            {
+                if (MessageBox.Show("No ha seleccionado a ningún cliente. ¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    tPVDataSetCabecerasComprasTableAdapter.Update(tPVDataSet);
+                    tPVDataSetLineasComprasTableAdapter.Update(tPVDataSet);
+                    tPVDataSetProductosTableAdapter.Update(tPVDataSet);
+                }
+            }
+            else if (MessageBox.Show("¿Está seguro de que quiere completar la venta?", "Completar venta", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 tPVDataSetCabecerasComprasTableAdapter.Update(tPVDataSet);
                 tPVDataSetLineasComprasTableAdapter.Update(tPVDataSet);
+                tPVDataSetProductosTableAdapter.Update(tPVDataSet);
             }
         }
 
@@ -997,6 +1019,7 @@ namespace TPV
             {
                 tPVDataSet.Tables["CabecerasCompra"].Rows.Find(idCabeceraCompra).Delete();
                 btnTerminarCompra.IsEnabled = false;
+                cbxClienteCompras.SelectedItem = null;
             }
         }
 
