@@ -425,6 +425,7 @@ namespace TPV
                 row["Apellidos"] = tbxApellidosProveedores.Text;
                 row["Direccion"] = tbxDireccionProveedores.Text;
                 row["Telefono"] = Convert.ToInt32(tbxTelefonoProveedores.Text);
+                row["Correo"] = tbxTelefonoProveedores.Text;
                 row["DNI"] = tbxDNIProveedores.Text;
 
                 tPVDataSet.Tables["ClientesVendedores"].Rows.Add(row);
@@ -535,6 +536,7 @@ namespace TPV
                 row["Apellidos"] = tbxApellidosProveedores.Text;
                 row["Direccion"] = tbxDireccionProveedores.Text;
                 row["Telefono"] = Convert.ToInt32(tbxTelefonoProveedores.Text);
+                row["Correo"] = tbxTelefonoProveedores.Text;
                 row["DNI"] = tbxDNIProveedores.Text;
 
                 tPVDataSetClientesVendedoresTableAdapter.Update(tPVDataSet);
@@ -612,6 +614,7 @@ namespace TPV
                 row["Apellidos"] = tbxApellidosClientes.Text;
                 row["Direccion"] = tbxDireccionClientes.Text;
                 row["Telefono"] = Convert.ToInt32(tbxTelefonoClientes.Text);
+                row["Correo"] = tbxTelefonoClientes.Text;
                 row["DNI"] = tbxDNIClientes.Text;
 
                 tPVDataSet.Tables["ClientesCompradores"].Rows.Add(row);
@@ -722,6 +725,7 @@ namespace TPV
                 row["Apellidos"] = tbxApellidosClientes.Text;
                 row["Direccion"] = tbxDireccionClientes.Text;
                 row["Telefono"] = Convert.ToInt32(tbxTelefonoClientes.Text);
+                row["Correo"] = tbxTelefonoClientes.Text;
                 row["DNI"] = tbxDNIClientes.Text;
 
                 tPVDataSetClientesCompradoresTableAdapter.Update(tPVDataSet);

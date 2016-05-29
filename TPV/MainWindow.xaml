@@ -276,6 +276,7 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Label Content="Nombre:" Margin="5" />
                                 <TextBox x:Name="tbxNombreProveedores" Margin="5" Grid.Column="1" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
@@ -285,8 +286,10 @@
                                 <TextBox x:Name="tbxDireccionProveedores" Margin="5" Grid.Column="1" Grid.Row="2"  FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
                                 <Label Content="Telefono:" Margin="5" Grid.Row="3" />
                                 <TextBox x:Name="tbxTelefonoProveedores" Margin="5" Grid.Column="1" Grid.Row="3"  FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
-                                <Label Content="DNI:" Margin="5" Grid.Row="4" />
-                                <TextBox x:Name="tbxDNIProveedores" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" FontSize="16" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
+                                <Label Content="Correo:" Margin="5" Grid.Row="4" />
+                                <TextBox x:Name="tbxCorreoProveedores" Margin="5" Grid.Column="1" Grid.Row="4" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Correo, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <Label Content="DNI:" Margin="5" Grid.Row="5" />
+                                <TextBox x:Name="tbxDNIProveedores" Margin="4,10,6,10" Grid.Column="1" Grid.Row="5" FontSize="16" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" IsReadOnly="True" />
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
@@ -333,6 +336,7 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Label Content="Nombre:" Margin="5" />
                                 <TextBox x:Name="tbxNombreClientes" Margin="5" Grid.Column="1" FontSize="16" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding Nombre, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
@@ -342,8 +346,10 @@
                                 <TextBox x:Name="tbxDireccionClientes" Margin="5" Grid.Column="1" Grid.Row="2" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Direccion, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
                                 <Label Content="Telefono:" Margin="5" Grid.Row="3" />
                                 <TextBox x:Name="tbxTelefonoClientes" Margin="5" Grid.Column="1" Grid.Row="3" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Telefono, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
-                                <Label Content="DNI:" Margin="5" Grid.Row="4" />
-                                <TextBox x:Name="tbxDNIClientes" Margin="4,10,6,10" Grid.Column="1" Grid.Row="4" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <Label Content="Correo:" Margin="5" Grid.Row="4" />
+                                <TextBox x:Name="tbxCorreoClientes" Margin="5" Grid.Column="1" Grid.Row="4" FontSize="16" VerticalAlignment="Center"  IsReadOnly="True" Text="{Binding Correo, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
+                                <Label Content="DNI:" Margin="5" Grid.Row="5" />
+                                <TextBox x:Name="tbxDNIClientes" Margin="4,10,6,10" Grid.Column="1" Grid.Row="5" Text="{Binding DNI, Mode=TwoWay, NotifyOnValidationError=true, Source={StaticResource clientesCompradoresViewSource}, ValidatesOnExceptions=true}" />
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal">
